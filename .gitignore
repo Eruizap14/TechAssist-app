@@ -1,15 +1,31 @@
-*.iml
-.gradle
-/local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
+# --- General ---
 .DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
-local.properties
+*.swp
+*~
+Thumbs.db
+
+# --- Carpetas de Usuario/Docs ---
+# Si quieres que archivos temporales de Word o PDF no se suban:
+~$*.docx
+*.tmp
+
+# --- Android / Mobile Project (Nueva ruta) ---
+# Esto ignora los archivos pesados dentro de la carpeta /mobile/
+mobile/*.iml
+mobile/.gradle
+mobile/local.properties
+mobile/.idea/caches
+mobile/.idea/libraries
+mobile/.idea/modules.xml
+mobile/.idea/workspace.xml
+mobile/.idea/navEditor.xml
+mobile/.idea/assetWizardSettings.xml
+mobile/.idea/deploymentTargetDropDown.xml
+mobile/build/
+mobile/captures/
+mobile/.externalNativeBuild
+mobile/.cxx
+
+# --- Otros ---
+.idea/
+*.log
