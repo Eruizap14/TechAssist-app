@@ -35,6 +35,19 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(
         db.execSQL(Regla.CREATE_TABLE)
         db.execSQL(Guia.CREATE_TABLE)
         db.execSQL(Consulta.CREATE_TABLE)
+
+        seedData(db)
+    }
+
+    private fun seedData(db: SQLiteDatabase) {
+        // ── Niveles Digitales ──────────────────────────────────────────────
+        db.execSQL("INSERT INTO ${NivelDigital.TABLE_NAME} (${NivelDigital.COL_NOMBRE}, ${NivelDigital.COL_DESCRIPCION}) VALUES ('Básico', 'Usuario con poca experiencia en herramientas digitales')")
+        db.execSQL("INSERT INTO ${NivelDigital.TABLE_NAME} (${NivelDigital.COL_NOMBRE}, ${NivelDigital.COL_DESCRIPCION}) VALUES ('Intermedio', 'Maneja aplicaciones estándar y tablets')")
+        db.execSQL("INSERT INTO ${NivelDigital.TABLE_NAME} (${NivelDigital.COL_NOMBRE}, ${NivelDigital.COL_DESCRIPCION}) VALUES ('Avanzado', 'Experto en sistemas digitales y diagnóstico remoto')")
+
+        // ── Herramientas ───────────────────────────────────────────────────
+        db.execSQL("INSERT INTO ${Herramienta.TABLE_NAME} (${Herramienta.COL_NOMBRE}, ${Herramienta.COL_DESCRIPCION}, ${Herramienta.COL_CATEGORIA}) VALUES ('Multímetro Digital', 'Medición de voltajes y resistencias', 'Electricidad')")
+        db.execSQL("INSERT INTO ${Herramienta.TABLE_NAME} (${Herramienta.COL_NOMBRE}, ${Herramienta.COL_DESCRIPCION}, ${Herramienta.COL_CATEGORIA}) VALUES ('Analizador de Vibraciones', 'Diagnóstico de rodamientos y motores', 'Mecánica')")
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
