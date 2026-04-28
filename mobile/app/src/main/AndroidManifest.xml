@@ -11,15 +11,27 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TechAssist">
+
+        <!-- Pantalla de inicio -->
         <activity
-            android:name=".model.MainActivity"
+            android:name=".ui.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Técnico -->
+        <activity
+            android:name=".ui.MinitestActivity"
+            android:exported="false" />
+
+        <!-- Supervisor / Administrador -->
+        <activity
+            android:name=".ui.SupervisorActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>

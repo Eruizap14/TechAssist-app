@@ -5,5 +5,7 @@
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
 
-    <style name="Theme.TechAssist" parent="Base.Theme.TechAssist" />
+    <style name="Theme.TechAssist" parent="Base.Theme.TechAssist">
+        <item name="checkboxStyle">@style/Widget.AppCompat.CompoundButton.CheckBox</item>
+    </style>
 </resources>
