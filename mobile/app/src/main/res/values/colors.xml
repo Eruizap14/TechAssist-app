@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <!-- Paleta TechAssist — Sección 5.2.1 -->
+    <color name="color_primary">#D32F2F</color>       <!-- Rojo corporativo: botones y cabeceras -->
+    <color name="color_primary_dark">#B00020</color>  <!-- Rojo oscuro: errores críticos -->
+    <color name="color_background">#F5F5F5</color>    <!-- Gris neutro: fondo general -->
+    <color name="color_surface">#FFFFFF</color>       <!-- Blanco: tarjetas y campos -->
+    <color name="color_amber">#F9A825</color>         <!-- Ámbar: estado sin conexión -->
+    <color name="color_success">#4CAF50</color>       <!-- Verde: confirmación / éxito -->
+    <color name="color_warning">#FFF600</color>       <!-- Amarillo: advertencia preventiva -->
+    <color name="color_gold">#FFC107</color>          <!-- Oro: gamificación / logros -->
+
+    <!-- Texto -->
+    <color name="color_on_primary">#FFFFFF</color>
+    <color name="color_on_background">#212121</color>
+    <color name="color_on_surface_secondary">#757575</color>
 </resources>
