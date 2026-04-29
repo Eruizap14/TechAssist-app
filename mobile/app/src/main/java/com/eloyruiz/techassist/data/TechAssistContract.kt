@@ -48,13 +48,13 @@ object TechAssistContract {
     // Usuario
     // ─────────────────────────────────────────────
     object Usuario {
-        const val TABLE_NAME          = "Usuario"
-        const val COL_ID              = "id_usuario"
-        const val COL_NOMBRE          = "nombre"
-        const val COL_ROL             = "rol"
+        const val TABLE_NAME           = "Usuario"
+        const val COL_ID               = "id_usuario"
+        const val COL_NOMBRE           = "nombre"
+        const val COL_ROL              = "rol"
         const val COL_NIVEL_DIGITAL_ID = "nivel_digital_id"
+        const val COL_CONTRASENA       = "contrasena"       // ← nuevo
 
-        // Valores válidos para el campo rol
         val ROLES = listOf("Técnico", "Supervisor", "Administrador")
 
         const val CREATE_TABLE = """
@@ -64,6 +64,7 @@ object TechAssistContract {
                 $COL_ROL              TEXT NOT NULL
                                       CHECK($COL_ROL IN ('Técnico','Supervisor','Administrador')),
                 $COL_NIVEL_DIGITAL_ID INTEGER NOT NULL,
+                $COL_CONTRASENA       TEXT NOT NULL,
                 FOREIGN KEY ($COL_NIVEL_DIGITAL_ID)
                     REFERENCES ${NivelDigital.TABLE_NAME}(${NivelDigital.COL_ID})
             )
@@ -76,11 +77,11 @@ object TechAssistContract {
     // Regla
     // ─────────────────────────────────────────────
     object Regla {
-        const val TABLE_NAME        = "Regla"
-        const val COL_ID            = "id_regla"
-        const val COL_CATEGORIA     = "categoria_tarea"
+        const val TABLE_NAME         = "Regla"
+        const val COL_ID             = "id_regla"
+        const val COL_CATEGORIA      = "categoria_tarea"
         const val COL_HERRAMIENTA_ID = "herramienta_id"
-        const val COL_EXPLICACION   = "explicacion"
+        const val COL_EXPLICACION    = "explicacion"
 
         const val CREATE_TABLE = """
             CREATE TABLE IF NOT EXISTS $TABLE_NAME (
@@ -100,12 +101,12 @@ object TechAssistContract {
     // Guia
     // ─────────────────────────────────────────────
     object Guia {
-        const val TABLE_NAME        = "Guia"
-        const val COL_ID            = "id_guia"
+        const val TABLE_NAME         = "Guia"
+        const val COL_ID             = "id_guia"
         const val COL_HERRAMIENTA_ID = "herramienta_id"
-        const val COL_PASO_1        = "paso_1"
-        const val COL_PASO_2        = "paso_2"
-        const val COL_PASO_3        = "paso_3"
+        const val COL_PASO_1         = "paso_1"
+        const val COL_PASO_2         = "paso_2"
+        const val COL_PASO_3         = "paso_3"
 
         const val CREATE_TABLE = """
             CREATE TABLE IF NOT EXISTS $TABLE_NAME (
@@ -126,12 +127,12 @@ object TechAssistContract {
     // Consulta
     // ─────────────────────────────────────────────
     object Consulta {
-        const val TABLE_NAME        = "Consulta"
-        const val COL_ID            = "id_consulta"
-        const val COL_USUARIO_ID    = "usuario_id"
+        const val TABLE_NAME         = "Consulta"
+        const val COL_ID             = "id_consulta"
+        const val COL_USUARIO_ID     = "usuario_id"
         const val COL_HERRAMIENTA_ID = "herramienta_id"
-        const val COL_FECHA         = "fecha"
-        const val COL_CATEGORIA     = "categoria_tarea"
+        const val COL_FECHA          = "fecha"
+        const val COL_CATEGORIA      = "categoria_tarea"
 
         const val CREATE_TABLE = """
             CREATE TABLE IF NOT EXISTS $TABLE_NAME (

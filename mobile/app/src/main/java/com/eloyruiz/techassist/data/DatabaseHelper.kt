@@ -20,7 +20,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(
 
     companion object {
         const val DATABASE_NAME    = "techassist.db"
-        const val DATABASE_VERSION = 1
+        const val DATABASE_VERSION = 2  // ← subido de 1 a 2 por el nuevo campo contrasena
     }
 
     // ─────────────────────────────────────────────
@@ -28,14 +28,12 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(
     // ─────────────────────────────────────────────
 
     override fun onCreate(db: SQLiteDatabase) {
-        // El orden respeta las dependencias de clave foránea
         db.execSQL(NivelDigital.CREATE_TABLE)
         db.execSQL(Herramienta.CREATE_TABLE)
         db.execSQL(Usuario.CREATE_TABLE)
         db.execSQL(Regla.CREATE_TABLE)
         db.execSQL(Guia.CREATE_TABLE)
         db.execSQL(Consulta.CREATE_TABLE)
-
         seedData(db)
     }
 
@@ -48,10 +46,24 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(
         // ── Herramientas ───────────────────────────────────────────────────
         db.execSQL("INSERT INTO ${Herramienta.TABLE_NAME} (${Herramienta.COL_NOMBRE}, ${Herramienta.COL_DESCRIPCION}, ${Herramienta.COL_CATEGORIA}) VALUES ('Multímetro Digital', 'Medición de voltajes y resistencias', 'Electricidad')")
         db.execSQL("INSERT INTO ${Herramienta.TABLE_NAME} (${Herramienta.COL_NOMBRE}, ${Herramienta.COL_DESCRIPCION}, ${Herramienta.COL_CATEGORIA}) VALUES ('Analizador de Vibraciones', 'Diagnóstico de rodamientos y motores', 'Mecánica')")
+
+        // ── Usuarios (contraseñas hasheadas con SHA-256) ───────────────────
+        val hash1234  = hashSha256("1234")
+        val hashAdmin = hashSha256("admin")
+
+        db.execSQL("""
+            INSERT INTO ${Usuario.TABLE_NAME}
+                (${Usuario.COL_ID}, ${Usuario.COL_NOMBRE}, ${Usuario.COL_ROL}, ${Usuario.COL_NIVEL_DIGITAL_ID}, ${Usuario.COL_CONTRASENA})
+            VALUES (1234, 'Técnico Demo', 'Técnico', 1, '$hash1234')
+        """)
+        db.execSQL("""
+            INSERT INTO ${Usuario.TABLE_NAME}
+                (${Usuario.COL_ID}, ${Usuario.COL_NOMBRE}, ${Usuario.COL_ROL}, ${Usuario.COL_NIVEL_DIGITAL_ID}, ${Usuario.COL_CONTRASENA})
+            VALUES (0, 'Administrador', 'Administrador', 3, '$hashAdmin')
+        """)
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        // Orden inverso para respetar las FK al eliminar
         db.execSQL(Consulta.DROP_TABLE)
         db.execSQL(Guia.DROP_TABLE)
         db.execSQL(Regla.DROP_TABLE)
@@ -63,10 +75,20 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(
 
     override fun onOpen(db: SQLiteDatabase) {
         super.onOpen(db)
-        // Activa el soporte de claves foráneas en cada conexión
         if (!db.isReadOnly) {
             db.execSQL("PRAGMA foreign_keys = ON;")
         }
+    }
+
+    // ─────────────────────────────────────────────
+    // Hash SHA-256
+    // ─────────────────────────────────────────────
+
+    fun hashSha256(input: String): String {
+        val bytes = java.security.MessageDigest
+            .getInstance("SHA-256")
+            .digest(input.toByteArray())
+        return bytes.joinToString("") { "%02x".format(it) }
     }
 
     // ─────────────────────────────────────────────
@@ -89,13 +111,11 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(
         )
         cursor.use {
             while (it.moveToNext()) {
-                result.add(
-                    mapOf(
-                        NivelDigital.COL_ID          to it.getInt(it.getColumnIndexOrThrow(NivelDigital.COL_ID)),
-                        NivelDigital.COL_NOMBRE      to it.getString(it.getColumnIndexOrThrow(NivelDigital.COL_NOMBRE)),
-                        NivelDigital.COL_DESCRIPCION to it.getString(it.getColumnIndexOrThrow(NivelDigital.COL_DESCRIPCION))
-                    )
-                )
+                result.add(mapOf(
+                    NivelDigital.COL_ID          to it.getInt(it.getColumnIndexOrThrow(NivelDigital.COL_ID)),
+                    NivelDigital.COL_NOMBRE      to it.getString(it.getColumnIndexOrThrow(NivelDigital.COL_NOMBRE)),
+                    NivelDigital.COL_DESCRIPCION to it.getString(it.getColumnIndexOrThrow(NivelDigital.COL_DESCRIPCION))
+                ))
             }
         }
         return result
@@ -121,17 +141,13 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(
             put(NivelDigital.COL_NOMBRE, nombre)
             put(NivelDigital.COL_DESCRIPCION, descripcion)
         }
-        return writableDatabase.update(
-            NivelDigital.TABLE_NAME, values,
-            "${NivelDigital.COL_ID} = ?", arrayOf(id.toString())
-        )
+        return writableDatabase.update(NivelDigital.TABLE_NAME, values,
+            "${NivelDigital.COL_ID} = ?", arrayOf(id.toString()))
     }
 
     fun deleteNivelDigital(id: Int): Int =
-        writableDatabase.delete(
-            NivelDigital.TABLE_NAME,
-            "${NivelDigital.COL_ID} = ?", arrayOf(id.toString())
-        )
+        writableDatabase.delete(NivelDigital.TABLE_NAME,
+            "${NivelDigital.COL_ID} = ?", arrayOf(id.toString()))
 
     // ─────────────────────────────────────────────
     // Herramienta – CRUD
@@ -154,14 +170,12 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(
         )
         cursor.use {
             while (it.moveToNext()) {
-                result.add(
-                    mapOf(
-                        Herramienta.COL_ID          to it.getInt(it.getColumnIndexOrThrow(Herramienta.COL_ID)),
-                        Herramienta.COL_NOMBRE      to it.getString(it.getColumnIndexOrThrow(Herramienta.COL_NOMBRE)),
-                        Herramienta.COL_DESCRIPCION to it.getString(it.getColumnIndexOrThrow(Herramienta.COL_DESCRIPCION)),
-                        Herramienta.COL_CATEGORIA   to it.getString(it.getColumnIndexOrThrow(Herramienta.COL_CATEGORIA))
-                    )
-                )
+                result.add(mapOf(
+                    Herramienta.COL_ID          to it.getInt(it.getColumnIndexOrThrow(Herramienta.COL_ID)),
+                    Herramienta.COL_NOMBRE      to it.getString(it.getColumnIndexOrThrow(Herramienta.COL_NOMBRE)),
+                    Herramienta.COL_DESCRIPCION to it.getString(it.getColumnIndexOrThrow(Herramienta.COL_DESCRIPCION)),
+                    Herramienta.COL_CATEGORIA   to it.getString(it.getColumnIndexOrThrow(Herramienta.COL_CATEGORIA))
+                ))
             }
         }
         return result
@@ -192,14 +206,12 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(
         )
         cursor.use {
             while (it.moveToNext()) {
-                result.add(
-                    mapOf(
-                        Herramienta.COL_ID          to it.getInt(it.getColumnIndexOrThrow(Herramienta.COL_ID)),
-                        Herramienta.COL_NOMBRE      to it.getString(it.getColumnIndexOrThrow(Herramienta.COL_NOMBRE)),
-                        Herramienta.COL_DESCRIPCION to it.getString(it.getColumnIndexOrThrow(Herramienta.COL_DESCRIPCION)),
-                        Herramienta.COL_CATEGORIA   to it.getString(it.getColumnIndexOrThrow(Herramienta.COL_CATEGORIA))
-                    )
-                )
+                result.add(mapOf(
+                    Herramienta.COL_ID          to it.getInt(it.getColumnIndexOrThrow(Herramienta.COL_ID)),
+                    Herramienta.COL_NOMBRE      to it.getString(it.getColumnIndexOrThrow(Herramienta.COL_NOMBRE)),
+                    Herramienta.COL_DESCRIPCION to it.getString(it.getColumnIndexOrThrow(Herramienta.COL_DESCRIPCION)),
+                    Herramienta.COL_CATEGORIA   to it.getString(it.getColumnIndexOrThrow(Herramienta.COL_CATEGORIA))
+                ))
             }
         }
         return result
@@ -211,28 +223,25 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(
             put(Herramienta.COL_DESCRIPCION, descripcion)
             put(Herramienta.COL_CATEGORIA, categoria)
         }
-        return writableDatabase.update(
-            Herramienta.TABLE_NAME, values,
-            "${Herramienta.COL_ID} = ?", arrayOf(id.toString())
-        )
+        return writableDatabase.update(Herramienta.TABLE_NAME, values,
+            "${Herramienta.COL_ID} = ?", arrayOf(id.toString()))
     }
 
     fun deleteHerramienta(id: Int): Int =
-        writableDatabase.delete(
-            Herramienta.TABLE_NAME,
-            "${Herramienta.COL_ID} = ?", arrayOf(id.toString())
-        )
+        writableDatabase.delete(Herramienta.TABLE_NAME,
+            "${Herramienta.COL_ID} = ?", arrayOf(id.toString()))
 
     // ─────────────────────────────────────────────
     // Usuario – CRUD
     // ─────────────────────────────────────────────
 
-    fun insertUsuario(nombre: String, rol: String, nivelDigitalId: Int): Long {
+    fun insertUsuario(nombre: String, rol: String, nivelDigitalId: Int, contrasena: String): Long {
         require(rol in Usuario.ROLES) { "Rol no válido: $rol" }
         val values = ContentValues().apply {
             put(Usuario.COL_NOMBRE, nombre)
             put(Usuario.COL_ROL, rol)
             put(Usuario.COL_NIVEL_DIGITAL_ID, nivelDigitalId)
+            put(Usuario.COL_CONTRASENA, hashSha256(contrasena))
         }
         return writableDatabase.insert(Usuario.TABLE_NAME, null, values)
     }
@@ -245,14 +254,13 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(
         )
         cursor.use {
             while (it.moveToNext()) {
-                result.add(
-                    mapOf(
-                        Usuario.COL_ID               to it.getInt(it.getColumnIndexOrThrow(Usuario.COL_ID)),
-                        Usuario.COL_NOMBRE           to it.getString(it.getColumnIndexOrThrow(Usuario.COL_NOMBRE)),
-                        Usuario.COL_ROL              to it.getString(it.getColumnIndexOrThrow(Usuario.COL_ROL)),
-                        Usuario.COL_NIVEL_DIGITAL_ID to it.getInt(it.getColumnIndexOrThrow(Usuario.COL_NIVEL_DIGITAL_ID))
-                    )
-                )
+                result.add(mapOf(
+                    Usuario.COL_ID               to it.getInt(it.getColumnIndexOrThrow(Usuario.COL_ID)),
+                    Usuario.COL_NOMBRE           to it.getString(it.getColumnIndexOrThrow(Usuario.COL_NOMBRE)),
+                    Usuario.COL_ROL              to it.getString(it.getColumnIndexOrThrow(Usuario.COL_ROL)),
+                    Usuario.COL_NIVEL_DIGITAL_ID to it.getInt(it.getColumnIndexOrThrow(Usuario.COL_NIVEL_DIGITAL_ID)),
+                    Usuario.COL_CONTRASENA       to it.getString(it.getColumnIndexOrThrow(Usuario.COL_CONTRASENA))
+                ))
             }
         }
         return result
@@ -269,7 +277,8 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(
                 Usuario.COL_ID               to it.getInt(it.getColumnIndexOrThrow(Usuario.COL_ID)),
                 Usuario.COL_NOMBRE           to it.getString(it.getColumnIndexOrThrow(Usuario.COL_NOMBRE)),
                 Usuario.COL_ROL              to it.getString(it.getColumnIndexOrThrow(Usuario.COL_ROL)),
-                Usuario.COL_NIVEL_DIGITAL_ID to it.getInt(it.getColumnIndexOrThrow(Usuario.COL_NIVEL_DIGITAL_ID))
+                Usuario.COL_NIVEL_DIGITAL_ID to it.getInt(it.getColumnIndexOrThrow(Usuario.COL_NIVEL_DIGITAL_ID)),
+                Usuario.COL_CONTRASENA       to it.getString(it.getColumnIndexOrThrow(Usuario.COL_CONTRASENA))
             ) else null
         }
     }
@@ -283,14 +292,13 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(
         )
         cursor.use {
             while (it.moveToNext()) {
-                result.add(
-                    mapOf(
-                        Usuario.COL_ID               to it.getInt(it.getColumnIndexOrThrow(Usuario.COL_ID)),
-                        Usuario.COL_NOMBRE           to it.getString(it.getColumnIndexOrThrow(Usuario.COL_NOMBRE)),
-                        Usuario.COL_ROL              to it.getString(it.getColumnIndexOrThrow(Usuario.COL_ROL)),
-                        Usuario.COL_NIVEL_DIGITAL_ID to it.getInt(it.getColumnIndexOrThrow(Usuario.COL_NIVEL_DIGITAL_ID))
-                    )
-                )
+                result.add(mapOf(
+                    Usuario.COL_ID               to it.getInt(it.getColumnIndexOrThrow(Usuario.COL_ID)),
+                    Usuario.COL_NOMBRE           to it.getString(it.getColumnIndexOrThrow(Usuario.COL_NOMBRE)),
+                    Usuario.COL_ROL              to it.getString(it.getColumnIndexOrThrow(Usuario.COL_ROL)),
+                    Usuario.COL_NIVEL_DIGITAL_ID to it.getInt(it.getColumnIndexOrThrow(Usuario.COL_NIVEL_DIGITAL_ID)),
+                    Usuario.COL_CONTRASENA       to it.getString(it.getColumnIndexOrThrow(Usuario.COL_CONTRASENA))
+                ))
             }
         }
         return result
@@ -303,20 +311,16 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(
             put(Usuario.COL_ROL, rol)
             put(Usuario.COL_NIVEL_DIGITAL_ID, nivelDigitalId)
         }
-        return writableDatabase.update(
-            Usuario.TABLE_NAME, values,
-            "${Usuario.COL_ID} = ?", arrayOf(id.toString())
-        )
+        return writableDatabase.update(Usuario.TABLE_NAME, values,
+            "${Usuario.COL_ID} = ?", arrayOf(id.toString()))
     }
 
     fun deleteUsuario(id: Int): Int =
-        writableDatabase.delete(
-            Usuario.TABLE_NAME,
-            "${Usuario.COL_ID} = ?", arrayOf(id.toString())
-        )
+        writableDatabase.delete(Usuario.TABLE_NAME,
+            "${Usuario.COL_ID} = ?", arrayOf(id.toString()))
 
     // ─────────────────────────────────────────────
-    // Regla – CRUD  (núcleo del agente experto)
+    // Regla – CRUD
     // ─────────────────────────────────────────────
 
     fun insertRegla(categoriaTarea: String, herramientaId: Int, explicacion: String?): Long {
@@ -336,23 +340,17 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(
         )
         cursor.use {
             while (it.moveToNext()) {
-                result.add(
-                    mapOf(
-                        Regla.COL_ID             to it.getInt(it.getColumnIndexOrThrow(Regla.COL_ID)),
-                        Regla.COL_CATEGORIA      to it.getString(it.getColumnIndexOrThrow(Regla.COL_CATEGORIA)),
-                        Regla.COL_HERRAMIENTA_ID to it.getInt(it.getColumnIndexOrThrow(Regla.COL_HERRAMIENTA_ID)),
-                        Regla.COL_EXPLICACION    to it.getString(it.getColumnIndexOrThrow(Regla.COL_EXPLICACION))
-                    )
-                )
+                result.add(mapOf(
+                    Regla.COL_ID             to it.getInt(it.getColumnIndexOrThrow(Regla.COL_ID)),
+                    Regla.COL_CATEGORIA      to it.getString(it.getColumnIndexOrThrow(Regla.COL_CATEGORIA)),
+                    Regla.COL_HERRAMIENTA_ID to it.getInt(it.getColumnIndexOrThrow(Regla.COL_HERRAMIENTA_ID)),
+                    Regla.COL_EXPLICACION    to it.getString(it.getColumnIndexOrThrow(Regla.COL_EXPLICACION))
+                ))
             }
         }
         return result
     }
 
-    /**
-     * Consulta clave del agente: dada una categoría de tarea devuelve la herramienta
-     * recomendada con su explicación (JOIN Regla → Herramienta).
-     */
     fun getRecomendacionPorCategoria(categoriaTarea: String): Map<String, Any?>? {
         val query = """
             SELECT r.${Regla.COL_ID},
@@ -371,13 +369,13 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(
         val cursor = readableDatabase.rawQuery(query, arrayOf(categoriaTarea))
         return cursor.use {
             if (it.moveToFirst()) mapOf(
-                Regla.COL_ID                  to it.getInt(it.getColumnIndexOrThrow(Regla.COL_ID)),
-                Regla.COL_CATEGORIA           to it.getString(it.getColumnIndexOrThrow(Regla.COL_CATEGORIA)),
-                Regla.COL_EXPLICACION         to it.getString(it.getColumnIndexOrThrow(Regla.COL_EXPLICACION)),
-                "herramienta_id"              to it.getInt(it.getColumnIndexOrThrow("herramienta_id")),
-                "herramienta_nombre"          to it.getString(it.getColumnIndexOrThrow("herramienta_nombre")),
-                "herramienta_descripcion"     to it.getString(it.getColumnIndexOrThrow("herramienta_descripcion")),
-                "herramienta_categoria"       to it.getString(it.getColumnIndexOrThrow("herramienta_categoria"))
+                Regla.COL_ID              to it.getInt(it.getColumnIndexOrThrow(Regla.COL_ID)),
+                Regla.COL_CATEGORIA       to it.getString(it.getColumnIndexOrThrow(Regla.COL_CATEGORIA)),
+                Regla.COL_EXPLICACION     to it.getString(it.getColumnIndexOrThrow(Regla.COL_EXPLICACION)),
+                "herramienta_id"          to it.getInt(it.getColumnIndexOrThrow("herramienta_id")),
+                "herramienta_nombre"      to it.getString(it.getColumnIndexOrThrow("herramienta_nombre")),
+                "herramienta_descripcion" to it.getString(it.getColumnIndexOrThrow("herramienta_descripcion")),
+                "herramienta_categoria"   to it.getString(it.getColumnIndexOrThrow("herramienta_categoria"))
             ) else null
         }
     }
@@ -388,17 +386,13 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(
             put(Regla.COL_HERRAMIENTA_ID, herramientaId)
             put(Regla.COL_EXPLICACION, explicacion)
         }
-        return writableDatabase.update(
-            Regla.TABLE_NAME, values,
-            "${Regla.COL_ID} = ?", arrayOf(id.toString())
-        )
+        return writableDatabase.update(Regla.TABLE_NAME, values,
+            "${Regla.COL_ID} = ?", arrayOf(id.toString()))
     }
 
     fun deleteRegla(id: Int): Int =
-        writableDatabase.delete(
-            Regla.TABLE_NAME,
-            "${Regla.COL_ID} = ?", arrayOf(id.toString())
-        )
+        writableDatabase.delete(Regla.TABLE_NAME,
+            "${Regla.COL_ID} = ?", arrayOf(id.toString()))
 
     // ─────────────────────────────────────────────
     // Guia – CRUD
@@ -437,20 +431,16 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(
             put(Guia.COL_PASO_2, paso2)
             put(Guia.COL_PASO_3, paso3)
         }
-        return writableDatabase.update(
-            Guia.TABLE_NAME, values,
-            "${Guia.COL_HERRAMIENTA_ID} = ?", arrayOf(herramientaId.toString())
-        )
+        return writableDatabase.update(Guia.TABLE_NAME, values,
+            "${Guia.COL_HERRAMIENTA_ID} = ?", arrayOf(herramientaId.toString()))
     }
 
     fun deleteGuia(herramientaId: Int): Int =
-        writableDatabase.delete(
-            Guia.TABLE_NAME,
-            "${Guia.COL_HERRAMIENTA_ID} = ?", arrayOf(herramientaId.toString())
-        )
+        writableDatabase.delete(Guia.TABLE_NAME,
+            "${Guia.COL_HERRAMIENTA_ID} = ?", arrayOf(herramientaId.toString()))
 
     // ─────────────────────────────────────────────
-    // Consulta – CRUD  (telemetría / monitorización)
+    // Consulta – CRUD
     // ─────────────────────────────────────────────
 
     fun insertConsulta(usuarioId: Int, herramientaId: Int, categoriaTarea: String?): Long {
@@ -458,7 +448,6 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(
             put(Consulta.COL_USUARIO_ID, usuarioId)
             put(Consulta.COL_HERRAMIENTA_ID, herramientaId)
             put(Consulta.COL_CATEGORIA, categoriaTarea)
-            // COL_FECHA usa DEFAULT(DATE('now')) de SQLite; se puede omitir
         }
         return writableDatabase.insert(Consulta.TABLE_NAME, null, values)
     }
@@ -471,15 +460,13 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(
         )
         cursor.use {
             while (it.moveToNext()) {
-                result.add(
-                    mapOf(
-                        Consulta.COL_ID             to it.getInt(it.getColumnIndexOrThrow(Consulta.COL_ID)),
-                        Consulta.COL_USUARIO_ID     to it.getInt(it.getColumnIndexOrThrow(Consulta.COL_USUARIO_ID)),
-                        Consulta.COL_HERRAMIENTA_ID to it.getInt(it.getColumnIndexOrThrow(Consulta.COL_HERRAMIENTA_ID)),
-                        Consulta.COL_FECHA          to it.getString(it.getColumnIndexOrThrow(Consulta.COL_FECHA)),
-                        Consulta.COL_CATEGORIA      to it.getString(it.getColumnIndexOrThrow(Consulta.COL_CATEGORIA))
-                    )
-                )
+                result.add(mapOf(
+                    Consulta.COL_ID             to it.getInt(it.getColumnIndexOrThrow(Consulta.COL_ID)),
+                    Consulta.COL_USUARIO_ID     to it.getInt(it.getColumnIndexOrThrow(Consulta.COL_USUARIO_ID)),
+                    Consulta.COL_HERRAMIENTA_ID to it.getInt(it.getColumnIndexOrThrow(Consulta.COL_HERRAMIENTA_ID)),
+                    Consulta.COL_FECHA          to it.getString(it.getColumnIndexOrThrow(Consulta.COL_FECHA)),
+                    Consulta.COL_CATEGORIA      to it.getString(it.getColumnIndexOrThrow(Consulta.COL_CATEGORIA))
+                ))
             }
         }
         return result
@@ -494,23 +481,18 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(
         )
         cursor.use {
             while (it.moveToNext()) {
-                result.add(
-                    mapOf(
-                        Consulta.COL_ID             to it.getInt(it.getColumnIndexOrThrow(Consulta.COL_ID)),
-                        Consulta.COL_USUARIO_ID     to it.getInt(it.getColumnIndexOrThrow(Consulta.COL_USUARIO_ID)),
-                        Consulta.COL_HERRAMIENTA_ID to it.getInt(it.getColumnIndexOrThrow(Consulta.COL_HERRAMIENTA_ID)),
-                        Consulta.COL_FECHA          to it.getString(it.getColumnIndexOrThrow(Consulta.COL_FECHA)),
-                        Consulta.COL_CATEGORIA      to it.getString(it.getColumnIndexOrThrow(Consulta.COL_CATEGORIA))
-                    )
-                )
+                result.add(mapOf(
+                    Consulta.COL_ID             to it.getInt(it.getColumnIndexOrThrow(Consulta.COL_ID)),
+                    Consulta.COL_USUARIO_ID     to it.getInt(it.getColumnIndexOrThrow(Consulta.COL_USUARIO_ID)),
+                    Consulta.COL_HERRAMIENTA_ID to it.getInt(it.getColumnIndexOrThrow(Consulta.COL_HERRAMIENTA_ID)),
+                    Consulta.COL_FECHA          to it.getString(it.getColumnIndexOrThrow(Consulta.COL_FECHA)),
+                    Consulta.COL_CATEGORIA      to it.getString(it.getColumnIndexOrThrow(Consulta.COL_CATEGORIA))
+                ))
             }
         }
         return result
     }
 
-    /**
-     * Panel de supervisión: herramientas más consultadas con su frecuencia.
-     */
     fun getHerramientasMasConsultadas(limit: Int = 10): List<Map<String, Any?>> {
         val query = """
             SELECT h.${Herramienta.COL_ID},
@@ -527,21 +509,17 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(
         val cursor = readableDatabase.rawQuery(query, arrayOf(limit.toString()))
         cursor.use {
             while (it.moveToNext()) {
-                result.add(
-                    mapOf(
-                        Herramienta.COL_ID      to it.getInt(it.getColumnIndexOrThrow(Herramienta.COL_ID)),
-                        Herramienta.COL_NOMBRE  to it.getString(it.getColumnIndexOrThrow(Herramienta.COL_NOMBRE)),
-                        "total_consultas"       to it.getInt(it.getColumnIndexOrThrow("total_consultas"))
-                    )
-                )
+                result.add(mapOf(
+                    Herramienta.COL_ID     to it.getInt(it.getColumnIndexOrThrow(Herramienta.COL_ID)),
+                    Herramienta.COL_NOMBRE to it.getString(it.getColumnIndexOrThrow(Herramienta.COL_NOMBRE)),
+                    "total_consultas"      to it.getInt(it.getColumnIndexOrThrow("total_consultas"))
+                ))
             }
         }
         return result
     }
 
     fun deleteConsulta(id: Int): Int =
-        writableDatabase.delete(
-            Consulta.TABLE_NAME,
-            "${Consulta.COL_ID} = ?", arrayOf(id.toString())
-        )
+        writableDatabase.delete(Consulta.TABLE_NAME,
+            "${Consulta.COL_ID} = ?", arrayOf(id.toString()))
 }

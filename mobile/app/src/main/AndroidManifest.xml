@@ -27,6 +27,10 @@
             android:name=".ui.MinitestActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".ui.MainTecnicoActivity"
+            android:exported="false" />
+
         <!-- Supervisor / Administrador -->
         <activity
             android:name=".ui.SupervisorActivity"

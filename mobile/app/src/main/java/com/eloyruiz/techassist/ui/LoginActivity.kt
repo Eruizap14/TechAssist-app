@@ -69,7 +69,7 @@ class LoginActivity : AppCompatActivity() {
             val idTexto    = etIdTecnico.text?.toString()?.trim() ?: ""
             val contrasena = etContrasena.text?.toString()?.trim() ?: ""
 
-            // Validación básica de campos vacíos
+            // Validación de campos vacíos
             if (idTexto.isEmpty()) {
                 tilIdTecnico.error = "Introduce tu ID de técnico"
                 return@setOnClickListener
@@ -98,8 +98,16 @@ class LoginActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            // En el MVP la contraseña no está en BD — se acepta cualquiera que no esté vacía.
-            // Cuando añadas autenticación real, aquí comparas el hash.
+            // ── Validar contraseña con SHA-256 ────────────────────────────
+            val hashIntroducido = hashSha256(contrasena)
+            val hashGuardado    = usuario[Usuario.COL_CONTRASENA] as? String
+
+            if (hashIntroducido != hashGuardado) {
+                tilContrasena.error = "Contraseña incorrecta"
+                return@setOnClickListener
+            } else {
+                tilContrasena.error = null
+            }
 
             // Guardar sesión si el checkbox está marcado
             if (checkRecordar.isChecked) {
@@ -112,10 +120,18 @@ class LoginActivity : AppCompatActivity() {
             val rol     = usuario[Usuario.COL_ROL]    as String
             val nivelId = usuario[Usuario.COL_NIVEL_DIGITAL_ID] as Int
 
-            // Redirigir según rol
+            // ── Decidir destino ───────────────────────────────────────────
+            // Supervisores y Administradores van siempre a su panel
+            // Técnicos: si es la primera vez → Minitest, si no → pantalla principal
             val destino: Class<*> = when (rol) {
                 "Supervisor", "Administrador" -> SupervisorActivity::class.java
-                else                          -> MinitestActivity::class.java
+                else -> {
+                    val minitestCompletado = prefs.getBoolean(
+                        miniTestKey(usuarioId), false
+                    )
+                    if (minitestCompletado) MainTecnicoActivity::class.java
+                    else                   MinitestActivity::class.java
+                }
             }
 
             val intent = Intent(this, destino).apply {
@@ -128,6 +144,15 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    // ── Hash SHA-256 ──────────────────────────────────────────────────────────
+
+    private fun hashSha256(input: String): String {
+        val bytes = java.security.MessageDigest
+            .getInstance("SHA-256")
+            .digest(input.toByteArray())
+        return bytes.joinToString("") { "%02x".format(it) }
+    }
+
     // ── Companion ─────────────────────────────────────────────────────────────
 
     companion object {
@@ -138,5 +163,8 @@ class LoginActivity : AppCompatActivity() {
 
         private const val PREFS_NAME = "techassist_prefs"
         private const val PREF_ID    = "pref_ultimo_id"
+
+        // Clave única por usuario para saber si ya completó el minitest
+        fun miniTestKey(usuarioId: Int) = "minitest_completado_$usuarioId"
     }
 }
