@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="@color/color_background"
+    android:paddingHorizontal="32dp">
+
+    <!-- Icono estrella / logro -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="★"
+        android:textSize="72sp"
+        android:textColor="@color/color_gold"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Título resultado -->
+    <TextView
+        android:id="@+id/tvTituloResultado"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="¡Nivel alcanzado!"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        android:textColor="@color/color_on_background"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Nivel obtenido (destacado en dorado) -->
+    <TextView
+        android:id="@+id/tvNivelObtenido"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Técnico Avanzado"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        android:textColor="@color/color_gold"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Descripción del nivel -->
+    <TextView
+        android:id="@+id/tvDescripcionNivel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Experto en sistemas digitales y diagnóstico remoto"
+        android:textSize="15sp"
+        android:textColor="@color/color_on_surface_secondary"
+        android:gravity="center"
+        android:layout_marginBottom="40dp"
+        android:lineSpacingExtra="4dp" />
+
+    <!-- Botón continuar -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnContinuar"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:text="Continuar →"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="@color/color_on_primary"
+        app:backgroundTint="@color/color_primary"
+        app:cornerRadius="8dp" />
+
+</LinearLayout>
