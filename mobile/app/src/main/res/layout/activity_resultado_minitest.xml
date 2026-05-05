@@ -1,66 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
     android:background="@color/color_background"
-    android:paddingHorizontal="32dp">
+    android:fillViewport="true">
 
-    <!-- Icono estrella / logro -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="★"
-        android:textSize="72sp"
-        android:textColor="@color/color_gold"
-        android:layout_marginBottom="16dp" />
-
-    <!-- Título resultado -->
-    <TextView
-        android:id="@+id/tvTituloResultado"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="¡Nivel alcanzado!"
-        android:textSize="26sp"
-        android:textStyle="bold"
-        android:textColor="@color/color_on_background"
-        android:layout_marginBottom="8dp" />
-
-    <!-- Nivel obtenido (destacado en dorado) -->
-    <TextView
-        android:id="@+id/tvNivelObtenido"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Técnico Avanzado"
-        android:textSize="32sp"
-        android:textStyle="bold"
-        android:textColor="@color/color_gold"
-        android:layout_marginBottom="16dp" />
-
-    <!-- Descripción del nivel -->
-    <TextView
-        android:id="@+id/tvDescripcionNivel"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Experto en sistemas digitales y diagnóstico remoto"
-        android:textSize="15sp"
-        android:textColor="@color/color_on_surface_secondary"
-        android:gravity="center"
-        android:layout_marginBottom="40dp"
-        android:lineSpacingExtra="4dp" />
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:paddingHorizontal="32dp"
+        android:paddingTop="60dp"
+        android:paddingBottom="40dp">
 
-    <!-- Botón continuar -->
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnContinuar"
-        android:layout_width="match_parent"
-        android:layout_height="52dp"
-        android:text="Continuar →"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        android:textColor="@color/color_on_primary"
-        app:backgroundTint="@color/color_primary"
-        app:cornerRadius="8dp" />
+        <!-- ── Estrella dorada #FFC107 — Logros/Gamificación — según 5.2.4 ── -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="★"
+            android:textSize="88sp"
+            android:textColor="#FFC107"
+            android:layout_marginBottom="8dp" />
 
-</LinearLayout>
+        <!-- Subtítulo -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="¡Test completado!"
+            android:textSize="15sp"
+            android:textColor="@color/color_on_surface_secondary"
+            android:layout_marginBottom="4dp" />
+
+        <!-- Nivel alcanzado en dorado — según 5.2.4 -->
+        <TextView
+            android:id="@+id/tvNivelObtenido"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Técnico Avanzado"
+            android:textSize="34sp"
+            android:textStyle="bold"
+            android:textColor="#FFC107"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Descripción breve del nivel -->
+        <TextView
+            android:id="@+id/tvDescripcionNivel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Experto en sistemas digitales y diagnóstico remoto"
+            android:textSize="15sp"
+            android:textColor="@color/color_on_surface_secondary"
+            android:gravity="center"
+            android:lineSpacingExtra="4dp"
+            android:layout_marginBottom="40dp" />
+
+        <!-- Tarjeta informativa: qué cambia en la app según el nivel -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="2dp"
+            app:cardBackgroundColor="@color/color_surface">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="¿Qué significa esto?"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/color_on_background"
+                    android:layout_marginBottom="8dp" />
+
+                <!-- ID correcto que referencia el .kt -->
+                <TextView
+                    android:id="@+id/tvExplicacion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="El sistema adaptará las guías y recomendaciones a tu nivel de experiencia digital."
+                    android:textSize="14sp"
+                    android:textColor="@color/color_on_surface_secondary"
+                    android:lineSpacingExtra="4dp" />
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Botón continuar -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnContinuar"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:text="Comenzar a usar TechAssist →"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:textColor="@color/color_on_primary"
+            app:backgroundTint="@color/color_primary"
+            app:cornerRadius="8dp" />
+
+    </LinearLayout>
+</ScrollView>
