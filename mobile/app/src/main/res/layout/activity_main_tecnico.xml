@@ -48,16 +48,16 @@
                 android:textColor="#FFCCCC"
                 android:layout_marginBottom="12dp" />
 
-            <!-- Buscador predictivo -->
+            <!-- Buscador predictivo - OPCIÓN A: Hint deshabilitado arriba -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilBuscador"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="¿Qué tarea va a realizar?"
+                app:hintEnabled="false"
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                 app:boxBackgroundColor="@color/color_surface"
-                app:boxStrokeColor="@color/color_surface"
-                app:hintTextColor="#757575"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="0dp"
                 app:startIconDrawable="@android:drawable/ic_menu_search"
                 app:startIconTint="@color/color_primary"
                 app:endIconMode="clear_text"
@@ -70,11 +70,12 @@
                     android:id="@+id/etBuscador"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:hint="¿Qué tarea va a realizar?"
                     android:imeOptions="actionSearch"
                     android:inputType="text"
                     android:textSize="15sp"
                     android:textColor="@color/color_on_background"
-                    android:background="@color/color_surface" />
+                    android:paddingVertical="12dp" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -96,7 +97,7 @@
             android:orientation="vertical"
             android:paddingTop="16dp">
 
-            <!-- Título sección — Title Medium 20sp en rojo — según 5.2.5 -->
+            <!-- Título sección -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -290,7 +291,7 @@
 
     </androidx.core.widget.NestedScrollView>
 
-    <!-- ── Banner Offline — ámbar #F9A825 — según 5.2.5 ── -->
+    <!-- ── Banner Offline ── -->
     <LinearLayout
         android:id="@+id/bannerOffline"
         android:layout_width="match_parent"
