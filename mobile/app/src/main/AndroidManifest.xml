@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -22,16 +24,20 @@
             </intent-filter>
         </activity>
 
-        <!-- Técnico -->
+        <!-- Flujo Técnico -->
         <activity
             android:name=".ui.MinitestActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.ResultadoMinitestActivity"
             android:exported="false" />
 
         <activity
             android:name=".ui.MainTecnicoActivity"
             android:exported="false" />
 
-        <!-- Supervisor / Administrador -->
+        <!-- Flujo Supervisor / Administrador -->
         <activity
             android:name=".ui.SupervisorActivity"
             android:exported="false" />

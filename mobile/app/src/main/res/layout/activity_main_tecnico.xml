@@ -14,41 +14,26 @@
         android:background="@color/color_primary"
         app:elevation="4dp">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/color_primary">
-
-            <ImageView
-                android:layout_width="120dp"
-                android:layout_height="32dp"
-                android:src="@drawable/logo"
-                android:scaleType="fitStart"
-                android:adjustViewBounds="true"
-                android:contentDescription="TechAssist" />
-
-        </androidx.appcompat.widget.Toolbar>
-
-        <!-- Saludo + buscador -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingHorizontal="16dp"
+            android:paddingTop="20dp"
             android:paddingBottom="16dp">
 
-            <!-- Saludo personalizado -->
+            <!-- Saludo personalizado — sin toolbar -->
             <TextView
                 android:id="@+id/tvSaludo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Hola, Técnico 👋"
-                android:textSize="14sp"
-                android:textColor="#FFCCCC"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:textColor="@color/color_on_primary"
                 android:layout_marginBottom="12dp" />
 
-            <!-- Buscador predictivo - OPCIÓN A: Hint deshabilitado arriba -->
+            <!-- Buscador predictivo -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilBuscador"
                 android:layout_width="match_parent"

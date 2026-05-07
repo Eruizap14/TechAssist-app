@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingHorizontal="16dp"
+    android:paddingVertical="14dp"
+    android:background="@color/color_surface">
+
+    <!-- Nombre del técnico -->
+    <TextView
+        android:id="@+id/tvNombreTecnico"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:text="Nombre"
+        android:textSize="14sp"
+        android:textColor="@color/color_on_background"
+        android:textStyle="bold" />
+
+    <!-- Nivel digital -->
+    <TextView
+        android:id="@+id/tvNivelTecnico"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Básico"
+        android:textSize="13sp"
+        android:textColor="@color/color_on_surface_secondary"
+        android:gravity="center" />
+
+    <!-- Número de consultas -->
+    <TextView
+        android:id="@+id/tvConsultasTecnico"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="0"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:textColor="@color/color_primary"
+        android:gravity="center" />
+
+</LinearLayout>
