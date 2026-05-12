@@ -78,8 +78,38 @@ class MinitestActivity : AppCompatActivity() {
             enunciado = "¿Con qué frecuencia utilizas herramientas digitales en tu jornada laboral?",
             opciones  = listOf("Casi nunca", "Ocasionalmente", "A diario, son parte de mi trabajo"),
             puntos    = listOf(0, 1, 2)
+        ),
+        Pregunta(
+            enunciado = "¿Has recibido alguna formación digital en tu empresa en los últimos 2 años?",
+            opciones  = listOf("No, ninguna", "Alguna sesión puntual", "Sí, formación específica y continua"),
+            puntos    = listOf(0, 1, 2)
+        ),
+        Pregunta(
+            enunciado = "¿Utilizas el correo electrónico o mensajería instantánea para comunicarte en el trabajo?",
+            opciones  = listOf("No, prefiero el teléfono o en persona", "Ocasionalmente", "Sí, es mi canal principal"),
+            puntos    = listOf(0, 1, 2)
+        ),
+        Pregunta(
+            enunciado = "Si tuvieras que aprender a usar una nueva herramienta digital, ¿qué harías?",
+            opciones  = listOf("Pediría a alguien que me lo explique en persona", "Buscaría un tutorial en YouTube", "Exploraría la herramienta solo y consultaría la documentación oficial"),
+            puntos    = listOf(0, 1, 2)
+        ),
+        Pregunta(
+            enunciado = "¿Sabes interpretar un informe o gráfico generado por un software de diagnóstico?",
+            opciones  = listOf("No, necesito ayuda para entenderlo", "Entiendo lo básico pero no los detalles", "Sí, puedo analizarlo e interpretar los datos"),
+            puntos    = listOf(0, 1, 2)
+        ),
+        Pregunta(
+            enunciado = "¿Has utilizado alguna vez sensores o dispositivos IoT conectados a un sistema de monitorización?",
+            opciones  = listOf("No sé lo que es", "He visto cómo funciona pero no lo he usado", "Sí, los configuro y superviso habitualmente"),
+            puntos    = listOf(0, 1, 2)
+        ),
+        Pregunta(
+            enunciado = "¿Cómo gestionas los manuales técnicos de los equipos que mantienes?",
+            opciones  = listOf("En papel, archivados en carpetas físicas", "Tengo alguno en PDF pero no siempre los encuentro", "Digitalizados y accesibles desde el móvil o tablet en cualquier momento"),
+            puntos    = listOf(0, 1, 2)
         )
-    )
+    ).shuffled().take(6)
 
     private val puntosPorPregunta = mutableListOf<Int>()
 
