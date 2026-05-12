@@ -311,7 +311,6 @@
         app:menu="@menu/menu_tecnico"
         app:itemIconTint="@color/color_primary"
         app:itemTextColor="@color/color_primary"
-        app:selectedItemId="@id/nav_inicio"
         app:elevation="8dp" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

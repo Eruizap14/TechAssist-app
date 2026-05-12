@@ -20,7 +20,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(
 
     companion object {
         const val DATABASE_NAME    = "techassist.db"
-        const val DATABASE_VERSION = 3  // ← subido a 3 por herramientas, reglas y guías completas
+        const val DATABASE_VERSION = 4
     }
 
     // ─────────────────────────────────────────────
@@ -94,9 +94,12 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(
         // ── Usuarios ───────────────────────────────────────────────────────
         val hash1234  = hashSha256("1234")
         val hashAdmin = hashSha256("admin")
+        val hashSergio = hashSha256("sergio123")
 
         db.execSQL("INSERT INTO ${Usuario.TABLE_NAME} (${Usuario.COL_ID}, ${Usuario.COL_NOMBRE}, ${Usuario.COL_ROL}, ${Usuario.COL_NIVEL_DIGITAL_ID}, ${Usuario.COL_CONTRASENA}) VALUES (1234, 'Técnico Demo', 'Técnico', 1, '$hash1234')")
         db.execSQL("INSERT INTO ${Usuario.TABLE_NAME} (${Usuario.COL_ID}, ${Usuario.COL_NOMBRE}, ${Usuario.COL_ROL}, ${Usuario.COL_NIVEL_DIGITAL_ID}, ${Usuario.COL_CONTRASENA}) VALUES (0, 'Administrador', 'Administrador', 3, '$hashAdmin')")
+        db.execSQL("INSERT INTO ${Usuario.TABLE_NAME} (${Usuario.COL_ID}, ${Usuario.COL_NOMBRE}, ${Usuario.COL_ROL}, ${Usuario.COL_NIVEL_DIGITAL_ID}, ${Usuario.COL_CONTRASENA}) VALUES (5678, 'Sergio Sánchez', 'Técnico', 1, '$hashSergio')")   // ← nuevo
+
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
