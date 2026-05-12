@@ -51,7 +51,7 @@
                 app:boxCornerRadiusBottomStart="30dp"
                 app:boxCornerRadiusBottomEnd="30dp">
 
-                <com.google.android.material.textfield.TextInputEditText
+                <AutoCompleteTextView
                     android:id="@+id/etBuscador"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -60,7 +60,8 @@
                     android:inputType="text"
                     android:textSize="15sp"
                     android:textColor="@color/color_on_background"
-                    android:paddingVertical="12dp" />
+                    android:paddingVertical="12dp"
+                    android:completionThreshold="1" />
 
             </com.google.android.material.textfield.TextInputLayout>
 

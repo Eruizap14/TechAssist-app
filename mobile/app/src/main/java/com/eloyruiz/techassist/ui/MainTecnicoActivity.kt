@@ -5,6 +5,8 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.view.View
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -15,13 +17,12 @@ import com.eloyruiz.techassist.data.DatabaseHelper
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.button.MaterialButton
-import com.google.android.material.textfield.TextInputEditText
 
 class MainTecnicoActivity : AppCompatActivity() {
 
     // ── Vistas ────────────────────────────────────────────────────────────────
     private lateinit var tvSaludo:        TextView
-    private lateinit var etBuscador:      TextInputEditText
+    private lateinit var etBuscador: AutoCompleteTextView
     private lateinit var bannerOffline:   LinearLayout
     private lateinit var bottomNav:       BottomNavigationView
 
@@ -107,6 +108,18 @@ class MainTecnicoActivity : AppCompatActivity() {
     // ── Buscador ──────────────────────────────────────────────────────────────
 
     private fun configurarBuscador() {
+        val sugerencias = listOf(
+            "Correctivo", "Preventivo", "Limpieza", "Eléctrico",
+            "Lubricación", "Inspección", "Mecánico", "Predictivo"
+        )
+        val adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, sugerencias)
+        etBuscador.setAdapter(adapter)
+
+        etBuscador.setOnItemClickListener { _, _, position, _ ->
+            buscarRecomendacion(sugerencias[position])
+            etBuscador.dismissDropDown()
+        }
+
         etBuscador.setOnEditorActionListener { _, _, _ ->
             val texto = etBuscador.text?.toString()?.trim() ?: ""
             if (texto.isNotEmpty()) buscarRecomendacion(texto)
