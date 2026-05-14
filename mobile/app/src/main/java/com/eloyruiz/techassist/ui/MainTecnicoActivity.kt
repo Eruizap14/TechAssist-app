@@ -9,8 +9,8 @@ import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.cardview.widget.CardView
 import com.eloyruiz.techassist.R
 import com.eloyruiz.techassist.data.DatabaseHelper
@@ -22,7 +22,7 @@ class MainTecnicoActivity : AppCompatActivity() {
 
     // ── Vistas ────────────────────────────────────────────────────────────────
     private lateinit var tvSaludo:        TextView
-    private lateinit var etBuscador: AutoCompleteTextView
+    private lateinit var etBuscador:      AutoCompleteTextView
     private lateinit var bannerOffline:   LinearLayout
     private lateinit var bottomNav:       BottomNavigationView
 
@@ -41,7 +41,6 @@ class MainTecnicoActivity : AppCompatActivity() {
     private var nombreUsuario: String = "Técnico"
     private var nivelId:       Int    = 1
 
-    // ── Mapa cardView.id → categoria_tarea de la BD ───────────────────────────
     private val categorias = mapOf(
         R.id.cardCorrectivo  to "Correctivo",
         R.id.cardPreventivo  to "Preventivo",
@@ -65,7 +64,6 @@ class MainTecnicoActivity : AppCompatActivity() {
         nivelId       = intent.getIntExtra(LoginActivity.EXTRA_NIVEL_ID, 1)
 
         bindViews()
-        configurarToolbar()
         configurarSaludo()
         configurarBuscador()
         configurarCategorias()
@@ -91,15 +89,7 @@ class MainTecnicoActivity : AppCompatActivity() {
         cardPredictivo  = findViewById(R.id.cardPredictivo)
     }
 
-    // ── Toolbar ───────────────────────────────────────────────────────────────
-
-    private fun configurarToolbar() {
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
-        setSupportActionBar(toolbar)
-        supportActionBar?.setDisplayShowTitleEnabled(false)
-    }
-
-    // ── Saludo personalizado con nombre real del técnico ──────────────────────
+    // ── Saludo ────────────────────────────────────────────────────────────────
 
     private fun configurarSaludo() {
         tvSaludo.text = "Hola, $nombreUsuario 👋"
@@ -127,7 +117,7 @@ class MainTecnicoActivity : AppCompatActivity() {
         }
     }
 
-    // ── Rejilla de categorías ─────────────────────────────────────────────────
+    // ── Categorías ────────────────────────────────────────────────────────────
 
     private fun configurarCategorias() {
         listOf(
@@ -146,21 +136,69 @@ class MainTecnicoActivity : AppCompatActivity() {
     private fun configurarMenu() {
         bottomNav.setOnItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.nav_inicio   -> true  // ya estamos aquí
+                R.id.nav_inicio -> true
+
                 R.id.nav_historial -> {
-                    // TODO: abrir pantalla de historial de consultas
-                    true
+                    mostrarHistorial()
+                    false
                 }
-                R.id.nav_perfil   -> {
-                    // TODO: abrir perfil del técnico
-                    true
+
+                R.id.nav_perfil -> {
+                    mostrarPerfil()
+                    false
                 }
+
                 else -> false
             }
         }
     }
 
-    // ── Lógica de recomendación ───────────────────────────────────────────────
+    private fun mostrarHistorial() {
+        val consultas = dbHelper.getConsultasByUsuario(usuarioId)
+
+        val dialog     = BottomSheetDialog(this)
+        val dialogView = layoutInflater.inflate(R.layout.dialog_historial, null)
+
+        val tvContenido = dialogView.findViewById<TextView>(R.id.tvHistorialContenido)
+        val btnCerrar   = dialogView.findViewById<MaterialButton>(R.id.btnCerrarHistorial)
+
+        if (consultas.isEmpty()) {
+            tvContenido.text = "Aún no has realizado ninguna consulta."
+        } else {
+            tvContenido.text = consultas.joinToString("\n\n") { consulta ->
+                val categoria = consulta["categoria_tarea"] as? String ?: "—"
+                val fecha     = consulta["fecha"]           as? String ?: "—"
+                "📅 $fecha  ·  $categoria"
+            }
+        }
+
+        btnCerrar.setOnClickListener { dialog.dismiss() }
+        dialog.setContentView(dialogView)
+        dialog.show()
+    }
+
+    private fun mostrarPerfil() {
+        val nivel = when (nivelId) {
+            1    -> "Básico"
+            2    -> "Intermedio"
+            else -> "Avanzado"
+        }
+
+        val dialog     = BottomSheetDialog(this)
+        val dialogView = layoutInflater.inflate(R.layout.dialog_perfil, null)
+
+        dialogView.findViewById<TextView>(R.id.tvPerfilNombre).text = nombreUsuario
+        dialogView.findViewById<TextView>(R.id.tvPerfilNivel).text  = "Nivel Digital: $nivel"
+        dialogView.findViewById<TextView>(R.id.tvPerfilId).text     = "ID: $usuarioId"
+
+        val btnCerrar = dialogView.findViewById<MaterialButton>(R.id.btnCerrarPerfil)
+        btnCerrar.setOnClickListener { dialog.dismiss() }
+
+        dialog.setContentView(dialogView)
+        dialog.show()
+    }
+
+    // ── Recomendación ─────────────────────────────────────────────────────────
 
     private fun buscarRecomendacion(categoriaTarea: String) {
         val recomendacion = dbHelper.getRecomendacionPorCategoria(categoriaTarea)
@@ -171,20 +209,17 @@ class MainTecnicoActivity : AppCompatActivity() {
                 herramienta = "Sin recomendación",
                 descripcion = "",
                 explicacion = "No hay ninguna regla definida para esta categoría. Consulta con tu supervisor.",
-                paso1       = "—",
-                paso2       = "—",
-                paso3       = "—"
+                paso1       = "—", paso2 = "—", paso3 = "—"
             )
             return
         }
 
-        val herramientaId    = recomendacion["herramienta_id"] as? Int ?: return
-        val herramientaNombre = recomendacion["herramienta_nombre"] as? String ?: ""
-        val herramientaDesc  = recomendacion["herramienta_descripcion"] as? String ?: ""
-        val explicacion      = recomendacion["explicacion"] as? String ?: ""
-        val guia             = dbHelper.getGuiaByHerramientaId(herramientaId)
+        val herramientaId     = recomendacion["herramienta_id"]          as? Int    ?: return
+        val herramientaNombre = recomendacion["herramienta_nombre"]       as? String ?: ""
+        val herramientaDesc   = recomendacion["herramienta_descripcion"]  as? String ?: ""
+        val explicacion       = recomendacion["explicacion"]              as? String ?: ""
+        val guia              = dbHelper.getGuiaByHerramientaId(herramientaId)
 
-        // Registrar consulta en la BD — alimenta el panel del supervisor
         dbHelper.insertConsulta(usuarioId, herramientaId, categoriaTarea)
 
         mostrarDialogoRecomendacion(
@@ -198,16 +233,9 @@ class MainTecnicoActivity : AppCompatActivity() {
         )
     }
 
-    // ── Bottom Sheet de recomendación (HU-01, HU-02, HU-03) ──────────────────
-
     private fun mostrarDialogoRecomendacion(
-        categoria:   String,
-        herramienta: String,
-        descripcion: String,
-        explicacion: String,
-        paso1:       String,
-        paso2:       String,
-        paso3:       String
+        categoria: String, herramienta: String, descripcion: String,
+        explicacion: String, paso1: String, paso2: String, paso3: String
     ) {
         val dialog     = BottomSheetDialog(this)
         val dialogView = layoutInflater.inflate(R.layout.dialog_recomendacion, null)
@@ -228,7 +256,7 @@ class MainTecnicoActivity : AppCompatActivity() {
         dialog.show()
     }
 
-    // ── Detección de conexión ─────────────────────────────────────────────────
+    // ── Conexión ──────────────────────────────────────────────────────────────
 
     private fun comprobarConexion() {
         bannerOffline.visibility = if (isOnline()) View.GONE else View.VISIBLE

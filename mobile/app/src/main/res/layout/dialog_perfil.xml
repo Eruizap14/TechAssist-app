@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="@color/color_surface">
+
+    <!-- Icono y título -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="👤  Mi perfil"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="@color/color_primary"
+        android:layout_marginBottom="24dp" />
+
+    <!-- Nombre -->
+    <TextView
+        android:id="@+id/tvPerfilNombre"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nombre"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:textColor="@color/color_on_background"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Nivel digital -->
+    <TextView
+        android:id="@+id/tvPerfilNivel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nivel Digital: —"
+        android:textSize="15sp"
+        android:textColor="@color/color_on_surface_secondary"
+        android:layout_marginBottom="4dp" />
+
+    <!-- ID -->
+    <TextView
+        android:id="@+id/tvPerfilId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ID: —"
+        android:textSize="13sp"
+        android:textColor="@color/color_on_surface_secondary"
+        android:layout_marginBottom="32dp" />
+
+    <!-- Botón cerrar -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnCerrarPerfil"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:text="Cerrar"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:textColor="@color/color_on_primary"
+        app:backgroundTint="@color/color_primary"
+        app:cornerRadius="8dp" />
+
+</LinearLayout>
