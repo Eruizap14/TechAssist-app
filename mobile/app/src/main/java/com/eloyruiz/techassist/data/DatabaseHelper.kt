@@ -20,12 +20,8 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(
 
     companion object {
         const val DATABASE_NAME    = "techassist.db"
-        const val DATABASE_VERSION = 4
+        const val DATABASE_VERSION = 5
     }
-
-    // ─────────────────────────────────────────────
-    // Ciclo de vida
-    // ─────────────────────────────────────────────
 
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(NivelDigital.CREATE_TABLE)
@@ -39,67 +35,47 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(
 
     private fun seedData(db: SQLiteDatabase) {
 
-        // ── Niveles Digitales ──────────────────────────────────────────────
-        db.execSQL("INSERT INTO ${NivelDigital.TABLE_NAME} (${NivelDigital.COL_NOMBRE}, ${NivelDigital.COL_DESCRIPCION}) VALUES ('Básico', 'Usuario con poca experiencia en herramientas digitales')")
+        db.execSQL("INSERT INTO ${NivelDigital.TABLE_NAME} (${NivelDigital.COL_NOMBRE}, ${NivelDigital.COL_DESCRIPCION}) VALUES ('Básico', 'Usuario con poca experiencia en herramientas')")
         db.execSQL("INSERT INTO ${NivelDigital.TABLE_NAME} (${NivelDigital.COL_NOMBRE}, ${NivelDigital.COL_DESCRIPCION}) VALUES ('Intermedio', 'Maneja aplicaciones estándar y tablets')")
-        db.execSQL("INSERT INTO ${NivelDigital.TABLE_NAME} (${NivelDigital.COL_NOMBRE}, ${NivelDigital.COL_DESCRIPCION}) VALUES ('Avanzado', 'Experto en sistemas digitales y diagnóstico remoto')")
+        db.execSQL("INSERT INTO ${NivelDigital.TABLE_NAME} (${NivelDigital.COL_NOMBRE}, ${NivelDigital.COL_DESCRIPCION}) VALUES ('Avanzado', 'Experto en sistemas y diagnóstico remoto')")
 
-        // ── Herramientas (id 1-8, una por categoría) ───────────────────────
-        // id 1 — Correctivo
-        db.execSQL("INSERT INTO ${Herramienta.TABLE_NAME} (${Herramienta.COL_NOMBRE}, ${Herramienta.COL_DESCRIPCION}, ${Herramienta.COL_CATEGORIA}) VALUES ('Multímetro Digital', 'Medición de voltajes, corrientes y resistencias en circuitos', 'Correctivo')")
-        // id 2 — Preventivo
-        db.execSQL("INSERT INTO ${Herramienta.TABLE_NAME} (${Herramienta.COL_NOMBRE}, ${Herramienta.COL_DESCRIPCION}, ${Herramienta.COL_CATEGORIA}) VALUES ('Check-list Digital', 'Lista de verificación periódica de estado de equipos', 'Preventivo')")
-        // id 3 — Limpieza
-        db.execSQL("INSERT INTO ${Herramienta.TABLE_NAME} (${Herramienta.COL_NOMBRE}, ${Herramienta.COL_DESCRIPCION}, ${Herramienta.COL_CATEGORIA}) VALUES ('Pistola de Aire Comprimido', 'Limpieza de componentes electrónicos y mecánicos', 'Limpieza')")
-        // id 4 — Eléctrico
-        db.execSQL("INSERT INTO ${Herramienta.TABLE_NAME} (${Herramienta.COL_NOMBRE}, ${Herramienta.COL_DESCRIPCION}, ${Herramienta.COL_CATEGORIA}) VALUES ('Pinza Amperimétrica', 'Medición de corriente sin cortar el circuito', 'Eléctrico')")
-        // id 5 — Lubricación
-        db.execSQL("INSERT INTO ${Herramienta.TABLE_NAME} (${Herramienta.COL_NOMBRE}, ${Herramienta.COL_DESCRIPCION}, ${Herramienta.COL_CATEGORIA}) VALUES ('Pistola Engrasadora', 'Aplicación de grasa en rodamientos y guías lineales', 'Lubricación')")
-        // id 6 — Inspección
-        db.execSQL("INSERT INTO ${Herramienta.TABLE_NAME} (${Herramienta.COL_NOMBRE}, ${Herramienta.COL_DESCRIPCION}, ${Herramienta.COL_CATEGORIA}) VALUES ('Cámara Termográfica', 'Detección de puntos calientes y fallos ocultos por infrarrojos', 'Inspección')")
-        // id 7 — Mecánico
-        db.execSQL("INSERT INTO ${Herramienta.TABLE_NAME} (${Herramienta.COL_NOMBRE}, ${Herramienta.COL_DESCRIPCION}, ${Herramienta.COL_CATEGORIA}) VALUES ('Llave Dinamométrica', 'Apriete de tornillos con par de torsión controlado', 'Mecánico')")
-        // id 8 — Predictivo
-        db.execSQL("INSERT INTO ${Herramienta.TABLE_NAME} (${Herramienta.COL_NOMBRE}, ${Herramienta.COL_DESCRIPCION}, ${Herramienta.COL_CATEGORIA}) VALUES ('Analizador de Vibraciones', 'Diagnóstico predictivo de rodamientos y motores por vibración', 'Predictivo')")
+        // Herramientas — mezcla de físicas y software según categoría
+        db.execSQL("INSERT INTO ${Herramienta.TABLE_NAME} (${Herramienta.COL_NOMBRE}, ${Herramienta.COL_DESCRIPCION}, ${Herramienta.COL_CATEGORIA}) VALUES ('Módulo de Incidencias (CMMS)', 'Registro y seguimiento de averías en el sistema de gestión de mantenimiento', 'Correctivo')")
+        db.execSQL("INSERT INTO ${Herramienta.TABLE_NAME} (${Herramienta.COL_NOMBRE}, ${Herramienta.COL_DESCRIPCION}, ${Herramienta.COL_CATEGORIA}) VALUES ('Check-list Digital', 'Lista de verificación periódica del estado de equipos registrada en la app', 'Preventivo')")
+        db.execSQL("INSERT INTO ${Herramienta.TABLE_NAME} (${Herramienta.COL_NOMBRE}, ${Herramienta.COL_DESCRIPCION}, ${Herramienta.COL_CATEGORIA}) VALUES ('Pistola de Aire Comprimido', 'Limpieza de componentes electrónicos y mecánicos sin contacto', 'Limpieza')")
+        db.execSQL("INSERT INTO ${Herramienta.TABLE_NAME} (${Herramienta.COL_NOMBRE}, ${Herramienta.COL_DESCRIPCION}, ${Herramienta.COL_CATEGORIA}) VALUES ('Software de Diagnóstico Eléctrico', 'Aplicación de análisis y registro de parámetros eléctricos en tiempo real', 'Eléctrico')")
+        db.execSQL("INSERT INTO ${Herramienta.TABLE_NAME} (${Herramienta.COL_NOMBRE}, ${Herramienta.COL_DESCRIPCION}, ${Herramienta.COL_CATEGORIA}) VALUES ('Pistola Engrasadora', 'Aplicación de lubricante en rodamientos y guías lineales con cantidad controlada', 'Lubricación')")
+        db.execSQL("INSERT INTO ${Herramienta.TABLE_NAME} (${Herramienta.COL_NOMBRE}, ${Herramienta.COL_DESCRIPCION}, ${Herramienta.COL_CATEGORIA}) VALUES ('Cámara Termográfica', 'Detección de puntos calientes y fallos ocultos mediante infrarrojos', 'Inspección')")
+        db.execSQL("INSERT INTO ${Herramienta.TABLE_NAME} (${Herramienta.COL_NOMBRE}, ${Herramienta.COL_DESCRIPCION}, ${Herramienta.COL_CATEGORIA}) VALUES ('Llave Dinamométrica', 'Apriete de tornillos con par de torsión controlado según especificación', 'Mecánico')")
+        db.execSQL("INSERT INTO ${Herramienta.TABLE_NAME} (${Herramienta.COL_NOMBRE}, ${Herramienta.COL_DESCRIPCION}, ${Herramienta.COL_CATEGORIA}) VALUES ('Plataforma de Análisis de Vibraciones', 'Software de monitorización predictiva de rodamientos y motores por espectro', 'Predictivo')")
 
-        // ── Reglas (agente experto) ────────────────────────────────────────
-        // Cada regla asocia una categoría_tarea a una herramienta_id con su explicación
-        db.execSQL("INSERT INTO ${Regla.TABLE_NAME} (${Regla.COL_CATEGORIA}, ${Regla.COL_HERRAMIENTA_ID}, ${Regla.COL_EXPLICACION}) VALUES ('Correctivo', 1, 'Ante un fallo eléctrico o avería inesperada, el multímetro permite localizar el punto de fallo midiendo voltaje, continuidad y resistencia de forma rápida y segura.')")
-        db.execSQL("INSERT INTO ${Regla.TABLE_NAME} (${Regla.COL_CATEGORIA}, ${Regla.COL_HERRAMIENTA_ID}, ${Regla.COL_EXPLICACION}) VALUES ('Preventivo', 2, 'El check-list digital garantiza que ningún punto de revisión periódica quede sin verificar, dejando trazabilidad automática de cada intervención.')")
-        db.execSQL("INSERT INTO ${Regla.TABLE_NAME} (${Regla.COL_CATEGORIA}, ${Regla.COL_HERRAMIENTA_ID}, ${Regla.COL_EXPLICACION}) VALUES ('Limpieza', 3, 'La pistola de aire comprimido elimina polvo y partículas de componentes delicados sin contacto físico, reduciendo el riesgo de daño durante la limpieza.')")
-        db.execSQL("INSERT INTO ${Regla.TABLE_NAME} (${Regla.COL_CATEGORIA}, ${Regla.COL_HERRAMIENTA_ID}, ${Regla.COL_EXPLICACION}) VALUES ('Eléctrico', 4, 'La pinza amperimétrica mide corriente en tiempo real sin interrumpir el circuito, siendo esencial para diagnosticar sobrecargas y desequilibrios de fase.')")
-        db.execSQL("INSERT INTO ${Regla.TABLE_NAME} (${Regla.COL_CATEGORIA}, ${Regla.COL_HERRAMIENTA_ID}, ${Regla.COL_EXPLICACION}) VALUES ('Lubricación', 5, 'La pistola engrasadora permite aplicar la cantidad exacta de lubricante en rodamientos y guías, evitando tanto la falta como el exceso de grasa.')")
-        db.execSQL("INSERT INTO ${Regla.TABLE_NAME} (${Regla.COL_CATEGORIA}, ${Regla.COL_HERRAMIENTA_ID}, ${Regla.COL_EXPLICACION}) VALUES ('Inspección', 6, 'La cámara termográfica detecta anomalías térmicas invisibles al ojo humano, permitiendo identificar conexiones flojas, motores sobrecalentados o fugas antes de que fallen.')")
-        db.execSQL("INSERT INTO ${Regla.TABLE_NAME} (${Regla.COL_CATEGORIA}, ${Regla.COL_HERRAMIENTA_ID}, ${Regla.COL_EXPLICACION}) VALUES ('Mecánico', 7, 'La llave dinamométrica asegura que cada tornillo quede apretado con el par exacto especificado por el fabricante, evitando roturas por exceso o aflojamientos por defecto.')")
-        db.execSQL("INSERT INTO ${Regla.TABLE_NAME} (${Regla.COL_CATEGORIA}, ${Regla.COL_HERRAMIENTA_ID}, ${Regla.COL_EXPLICACION}) VALUES ('Predictivo', 8, 'El analizador de vibraciones detecta patrones anómalos en rodamientos y motores antes de que se produzca el fallo, permitiendo planificar la intervención sin parada de emergencia.')")
+        // Reglas del agente experto
+        db.execSQL("INSERT INTO ${Regla.TABLE_NAME} (${Regla.COL_CATEGORIA}, ${Regla.COL_HERRAMIENTA_ID}, ${Regla.COL_EXPLICACION}) VALUES ('Correctivo', 1, 'Ante una avería inesperada, registrar la incidencia en el CMMS permite asignar prioridad, notificar al supervisor y dejar trazabilidad del diagnóstico y la resolución.')")
+        db.execSQL("INSERT INTO ${Regla.TABLE_NAME} (${Regla.COL_CATEGORIA}, ${Regla.COL_HERRAMIENTA_ID}, ${Regla.COL_EXPLICACION}) VALUES ('Preventivo', 2, 'El check-list garantiza que ningún punto de revisión quede sin verificar, generando trazabilidad automática de cada intervención con fecha, hora y técnico responsable.')")
+        db.execSQL("INSERT INTO ${Regla.TABLE_NAME} (${Regla.COL_CATEGORIA}, ${Regla.COL_HERRAMIENTA_ID}, ${Regla.COL_EXPLICACION}) VALUES ('Limpieza', 3, 'La pistola de aire comprimido elimina polvo y partículas de componentes delicados sin contacto físico, reduciendo el riesgo de daño durante la intervención.')")
+        db.execSQL("INSERT INTO ${Regla.TABLE_NAME} (${Regla.COL_CATEGORIA}, ${Regla.COL_HERRAMIENTA_ID}, ${Regla.COL_EXPLICACION}) VALUES ('Eléctrico', 4, 'El software de diagnóstico eléctrico registra y analiza parámetros como voltaje, corriente y factor de potencia, facilitando la detección de sobrecargas y desequilibrios de fase.')")
+        db.execSQL("INSERT INTO ${Regla.TABLE_NAME} (${Regla.COL_CATEGORIA}, ${Regla.COL_HERRAMIENTA_ID}, ${Regla.COL_EXPLICACION}) VALUES ('Lubricación', 5, 'La pistola engrasadora aplica la cantidad exacta de lubricante en rodamientos y guías, evitando tanto la falta como el exceso de grasa que podrían dañar el equipo.')")
+        db.execSQL("INSERT INTO ${Regla.TABLE_NAME} (${Regla.COL_CATEGORIA}, ${Regla.COL_HERRAMIENTA_ID}, ${Regla.COL_EXPLICACION}) VALUES ('Inspección', 6, 'La cámara termográfica detecta anomalías térmicas antes de que produzcan un fallo, permitiendo identificar conexiones flojas o motores sobrecalentados sin detener la producción.')")
+        db.execSQL("INSERT INTO ${Regla.TABLE_NAME} (${Regla.COL_CATEGORIA}, ${Regla.COL_HERRAMIENTA_ID}, ${Regla.COL_EXPLICACION}) VALUES ('Mecánico', 7, 'La llave dinamométrica garantiza que cada tornillo quede apretado con el par exacto del fabricante, evitando roturas por exceso o aflojamientos por defecto.')")
+        db.execSQL("INSERT INTO ${Regla.TABLE_NAME} (${Regla.COL_CATEGORIA}, ${Regla.COL_HERRAMIENTA_ID}, ${Regla.COL_EXPLICACION}) VALUES ('Predictivo', 8, 'La plataforma de análisis de vibraciones detecta patrones anómalos en rodamientos y motores antes del fallo, permitiendo planificar la intervención sin parada de emergencia.')")
 
-        // ── Guías de primeros pasos (3 pasos por herramienta) ─────────────
-        // Guía herramienta 1 — Multímetro Digital
-        db.execSQL("INSERT INTO ${Guia.TABLE_NAME} (${Guia.COL_HERRAMIENTA_ID}, ${Guia.COL_PASO_1}, ${Guia.COL_PASO_2}, ${Guia.COL_PASO_3}) VALUES (1, 'Selecciona la magnitud a medir (voltaje DC/AC, resistencia o continuidad) girando el selector del multímetro.', 'Conecta las puntas de prueba: la roja al terminal positivo (+) y la negra al COM (-) del multímetro.', 'Aplica las puntas al circuito con la instalación desenergizada para resistencia, o energizada para voltaje, y lee el valor en pantalla.')")
-        // Guía herramienta 2 — Check-list Digital
+        // Guías de uso
+        db.execSQL("INSERT INTO ${Guia.TABLE_NAME} (${Guia.COL_HERRAMIENTA_ID}, ${Guia.COL_PASO_1}, ${Guia.COL_PASO_2}, ${Guia.COL_PASO_3}) VALUES (1, 'Abre el módulo de incidencias del CMMS y crea una nueva orden de trabajo indicando el equipo afectado y la descripción del fallo.', 'Asigna la prioridad (crítica, alta, media o baja) según el impacto en producción y adjunta fotografías del problema si es posible.', 'Guarda la orden y notifica al supervisor. El sistema generará automáticamente un número de referencia para el seguimiento.')")
         db.execSQL("INSERT INTO ${Guia.TABLE_NAME} (${Guia.COL_HERRAMIENTA_ID}, ${Guia.COL_PASO_1}, ${Guia.COL_PASO_2}, ${Guia.COL_PASO_3}) VALUES (2, 'Abre el check-list correspondiente al equipo y al tipo de revisión (diaria, semanal o mensual) desde la app.', 'Recorre cada punto de verificación marcando el estado: correcto, con observación o requiere intervención.', 'Firma digitalmente el check-list al terminar para que quede registrado con fecha, hora y técnico responsable.')")
-        // Guía herramienta 3 — Pistola de Aire Comprimido
-        db.execSQL("INSERT INTO ${Guia.TABLE_NAME} (${Guia.COL_HERRAMIENTA_ID}, ${Guia.COL_PASO_1}, ${Guia.COL_PASO_2}, ${Guia.COL_PASO_3}) VALUES (3, 'Desconecta o aísla el equipo a limpiar y coloca gafas de protección antes de usar la pistola.', 'Dirige el chorro de aire a una distancia de 10-15 cm del componente, soplando de dentro hacia fuera para no empujar la suciedad al interior.', 'Recoge el polvo expulsado con un paño o aspirador industrial y verifica que no queden residuos en zonas críticas.')")
-        // Guía herramienta 4 — Pinza Amperimétrica
-        db.execSQL("INSERT INTO ${Guia.TABLE_NAME} (${Guia.COL_HERRAMIENTA_ID}, ${Guia.COL_PASO_1}, ${Guia.COL_PASO_2}, ${Guia.COL_PASO_3}) VALUES (4, 'Selecciona el rango de corriente adecuado en la pinza (AC o DC) según el circuito que vayas a medir.', 'Abre la mordaza y rodea con ella un único conductor activo: si incluyes dos conductores la medición se anulará.', 'Lee el valor de corriente en pantalla con el equipo en funcionamiento y compáralo con los valores nominales del fabricante.')")
-        // Guía herramienta 5 — Pistola Engrasadora
+        db.execSQL("INSERT INTO ${Guia.TABLE_NAME} (${Guia.COL_HERRAMIENTA_ID}, ${Guia.COL_PASO_1}, ${Guia.COL_PASO_2}, ${Guia.COL_PASO_3}) VALUES (3, 'Desconecta o aísla el equipo a limpiar y coloca gafas de protección antes de usar la pistola.', 'Dirige el chorro de aire a 10-15 cm del componente, soplando de dentro hacia fuera para no empujar la suciedad al interior.', 'Recoge el polvo expulsado con un paño o aspirador industrial y verifica que no queden residuos en zonas críticas.')")
+        db.execSQL("INSERT INTO ${Guia.TABLE_NAME} (${Guia.COL_HERRAMIENTA_ID}, ${Guia.COL_PASO_1}, ${Guia.COL_PASO_2}, ${Guia.COL_PASO_3}) VALUES (4, 'Abre el software de diagnóstico eléctrico y selecciona el equipo o circuito a analizar desde el listado de activos.', 'Inicia la captura de parámetros en tiempo real. Revisa los valores de voltaje, corriente y factor de potencia frente a los valores nominales.', 'Si detectas una anomalía, guarda el informe generado automáticamente y regístralo como incidencia en el sistema.')")
         db.execSQL("INSERT INTO ${Guia.TABLE_NAME} (${Guia.COL_HERRAMIENTA_ID}, ${Guia.COL_PASO_1}, ${Guia.COL_PASO_2}, ${Guia.COL_PASO_3}) VALUES (5, 'Consulta la ficha técnica del equipo para conocer el tipo de grasa recomendado y la cantidad en gramos por punto de engrase.', 'Conecta la boquilla de la pistola al niple de engrase y aplica la cantidad indicada con presión constante y controlada.', 'Limpia el exceso de grasa que salga por los retenes y registra la intervención indicando fecha, tipo de grasa y cantidad aplicada.')")
-        // Guía herramienta 6 — Cámara Termográfica
-        db.execSQL("INSERT INTO ${Guia.TABLE_NAME} (${Guia.COL_HERRAMIENTA_ID}, ${Guia.COL_PASO_1}, ${Guia.COL_PASO_2}, ${Guia.COL_PASO_3}) VALUES (6, 'Enciende la cámara y deja que se estabilice 5 minutos antes de medir. Configura la emisividad según el material a inspeccionar (0.95 para superficies oxidadas o pintadas).', 'Escanea el equipo con el circuito en carga normal manteniendo una distancia constante. Busca zonas con temperatura significativamente superior a las adyacentes.', 'Guarda las imágenes termográficas con anotaciones de temperatura máxima, localización y fecha para incluirlas en el informe de inspección.')")
-        // Guía herramienta 7 — Llave Dinamométrica
-        db.execSQL("INSERT INTO ${Guia.TABLE_NAME} (${Guia.COL_HERRAMIENTA_ID}, ${Guia.COL_PASO_1}, ${Guia.COL_PASO_2}, ${Guia.COL_PASO_3}) VALUES (7, 'Consulta la documentación del fabricante para conocer el par de apriete especificado en N·m para cada tornillo o conexión.', 'Ajusta la escala de la llave dinamométrica al valor indicado y selecciona el vaso adecuado al tipo y tamaño del tornillo.', 'Aprieta el tornillo con movimiento suave y continuo hasta que la llave emita el clic o ceda, indicando que se alcanzó el par programado.')")
-        // Guía herramienta 8 — Analizador de Vibraciones
-        db.execSQL("INSERT INTO ${Guia.TABLE_NAME} (${Guia.COL_HERRAMIENTA_ID}, ${Guia.COL_PASO_1}, ${Guia.COL_PASO_2}, ${Guia.COL_PASO_3}) VALUES (8, 'Fija el acelerómetro en la carcasa del rodamiento o motor en la dirección de medición (horizontal, vertical y axial) con imán o adhesivo.', 'Inicia la captura con el equipo funcionando en condiciones normales de carga. Registra el espectro de frecuencias durante al menos 30 segundos.', 'Compara el espectro obtenido con la línea base del equipo. Un aumento de amplitud en frecuencias características indica desgaste de rodamiento o desequilibrio.')")
+        db.execSQL("INSERT INTO ${Guia.TABLE_NAME} (${Guia.COL_HERRAMIENTA_ID}, ${Guia.COL_PASO_1}, ${Guia.COL_PASO_2}, ${Guia.COL_PASO_3}) VALUES (6, 'Enciende la cámara y déjala estabilizar 5 minutos. Configura la emisividad según el material (0.95 para superficies oxidadas o pintadas).', 'Escanea el equipo en carga normal a distancia constante. Busca zonas con temperatura significativamente superior a las adyacentes.', 'Guarda las imágenes con anotaciones de temperatura máxima, localización y fecha para incluirlas en el informe de inspección.')")
+        db.execSQL("INSERT INTO ${Guia.TABLE_NAME} (${Guia.COL_HERRAMIENTA_ID}, ${Guia.COL_PASO_1}, ${Guia.COL_PASO_2}, ${Guia.COL_PASO_3}) VALUES (7, 'Consulta la documentación del fabricante para conocer el par de apriete en N·m para cada tornillo o conexión.', 'Ajusta la escala de la llave al valor indicado y selecciona el vaso adecuado al tipo y tamaño del tornillo.', 'Aprieta con movimiento suave y continuo hasta que la llave emita el clic o ceda, indicando que se alcanzó el par programado.')")
+        db.execSQL("INSERT INTO ${Guia.TABLE_NAME} (${Guia.COL_HERRAMIENTA_ID}, ${Guia.COL_PASO_1}, ${Guia.COL_PASO_2}, ${Guia.COL_PASO_3}) VALUES (8, 'Accede a la plataforma de análisis de vibraciones y selecciona el activo a monitorizar. Conecta el sensor al punto de medición indicado en el plano del equipo.', 'Inicia la captura con el equipo en condiciones normales de carga durante al menos 30 segundos para obtener un espectro representativo.', 'Compara el espectro con la línea base del equipo. Un aumento de amplitud en frecuencias características indica desgaste o desequilibrio.')")
 
-        // ── Usuarios ───────────────────────────────────────────────────────
-        val hash1234  = hashSha256("1234")
-        val hashAdmin = hashSha256("admin")
+        val hash1234   = hashSha256("1234")
+        val hashAdmin  = hashSha256("admin")
         val hashSergio = hashSha256("sergio123")
 
         db.execSQL("INSERT INTO ${Usuario.TABLE_NAME} (${Usuario.COL_ID}, ${Usuario.COL_NOMBRE}, ${Usuario.COL_ROL}, ${Usuario.COL_NIVEL_DIGITAL_ID}, ${Usuario.COL_CONTRASENA}) VALUES (1234, 'Técnico Demo', 'Técnico', 1, '$hash1234')")
         db.execSQL("INSERT INTO ${Usuario.TABLE_NAME} (${Usuario.COL_ID}, ${Usuario.COL_NOMBRE}, ${Usuario.COL_ROL}, ${Usuario.COL_NIVEL_DIGITAL_ID}, ${Usuario.COL_CONTRASENA}) VALUES (0, 'Administrador', 'Administrador', 3, '$hashAdmin')")
-        db.execSQL("INSERT INTO ${Usuario.TABLE_NAME} (${Usuario.COL_ID}, ${Usuario.COL_NOMBRE}, ${Usuario.COL_ROL}, ${Usuario.COL_NIVEL_DIGITAL_ID}, ${Usuario.COL_CONTRASENA}) VALUES (5678, 'Sergio Sánchez', 'Técnico', 1, '$hashSergio')")   // ← nuevo
-
+        db.execSQL("INSERT INTO ${Usuario.TABLE_NAME} (${Usuario.COL_ID}, ${Usuario.COL_NOMBRE}, ${Usuario.COL_ROL}, ${Usuario.COL_NIVEL_DIGITAL_ID}, ${Usuario.COL_CONTRASENA}) VALUES (5678, 'Sergio Sánchez', 'Técnico', 1, '$hashSergio')")
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
@@ -119,20 +95,12 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(
         }
     }
 
-    // ─────────────────────────────────────────────
-    // Hash SHA-256
-    // ─────────────────────────────────────────────
-
     fun hashSha256(input: String): String {
         val bytes = java.security.MessageDigest
             .getInstance("SHA-256")
             .digest(input.toByteArray())
         return bytes.joinToString("") { "%02x".format(it) }
     }
-
-    // ─────────────────────────────────────────────
-    // NivelDigital – CRUD
-    // ─────────────────────────────────────────────
 
     fun insertNivelDigital(nombre: String, descripcion: String?): Long {
         val values = ContentValues().apply {
@@ -187,10 +155,6 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(
     fun deleteNivelDigital(id: Int): Int =
         writableDatabase.delete(NivelDigital.TABLE_NAME,
             "${NivelDigital.COL_ID} = ?", arrayOf(id.toString()))
-
-    // ─────────────────────────────────────────────
-    // Herramienta – CRUD
-    // ─────────────────────────────────────────────
 
     fun insertHerramienta(nombre: String, descripcion: String?, categoria: String?): Long {
         val values = ContentValues().apply {
@@ -269,10 +233,6 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(
     fun deleteHerramienta(id: Int): Int =
         writableDatabase.delete(Herramienta.TABLE_NAME,
             "${Herramienta.COL_ID} = ?", arrayOf(id.toString()))
-
-    // ─────────────────────────────────────────────
-    // Usuario – CRUD
-    // ─────────────────────────────────────────────
 
     fun insertUsuario(nombre: String, rol: String, nivelDigitalId: Int, contrasena: String): Long {
         require(rol in Usuario.ROLES) { "Rol no válido: $rol" }
@@ -358,10 +318,6 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(
         writableDatabase.delete(Usuario.TABLE_NAME,
             "${Usuario.COL_ID} = ?", arrayOf(id.toString()))
 
-    // ─────────────────────────────────────────────
-    // Regla – CRUD
-    // ─────────────────────────────────────────────
-
     fun insertRegla(categoriaTarea: String, herramientaId: Int, explicacion: String?): Long {
         val values = ContentValues().apply {
             put(Regla.COL_CATEGORIA, categoriaTarea)
@@ -433,10 +389,6 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(
         writableDatabase.delete(Regla.TABLE_NAME,
             "${Regla.COL_ID} = ?", arrayOf(id.toString()))
 
-    // ─────────────────────────────────────────────
-    // Guia – CRUD
-    // ─────────────────────────────────────────────
-
     fun insertGuia(herramientaId: Int, paso1: String?, paso2: String?, paso3: String?): Long {
         val values = ContentValues().apply {
             put(Guia.COL_HERRAMIENTA_ID, herramientaId)
@@ -477,10 +429,6 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(
     fun deleteGuia(herramientaId: Int): Int =
         writableDatabase.delete(Guia.TABLE_NAME,
             "${Guia.COL_HERRAMIENTA_ID} = ?", arrayOf(herramientaId.toString()))
-
-    // ─────────────────────────────────────────────
-    // Consulta – CRUD
-    // ─────────────────────────────────────────────
 
     fun insertConsulta(usuarioId: Int, herramientaId: Int, categoriaTarea: String?): Long {
         val values = ContentValues().apply {
