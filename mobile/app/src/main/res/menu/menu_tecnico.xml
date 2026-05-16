@@ -16,4 +16,10 @@
         android:icon="@drawable/ic_perfil"
         android:title="Perfil" />
 
+    <item
+        android:id="@+id/nav_panel"
+        android:icon="@drawable/ic_inicio"
+        android:title="Panel"
+        android:visible="false" />
+
 </menu>

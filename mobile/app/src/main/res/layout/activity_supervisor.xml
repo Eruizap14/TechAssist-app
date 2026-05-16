@@ -18,8 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/color_primary"
-            app:navigationIcon="@drawable/ic_menu_white"
-            app:navigationContentDescription="Menú">
+            >
 
             <LinearLayout
                 android:layout_width="match_parent"

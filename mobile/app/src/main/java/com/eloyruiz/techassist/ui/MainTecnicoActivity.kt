@@ -1,6 +1,7 @@
 package com.eloyruiz.techassist.ui
 
 import android.content.Context
+import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Bundle
@@ -134,20 +135,24 @@ class MainTecnicoActivity : AppCompatActivity() {
     // ── Menú inferior ─────────────────────────────────────────────────────────
 
     private fun configurarMenu() {
+        val rol = intent.getStringExtra(LoginActivity.EXTRA_USUARIO_ROL) ?: ""
+        bottomNav.menu.findItem(R.id.nav_panel)?.isVisible =
+            rol == "Supervisor" || rol == "Administrador"
+
         bottomNav.setOnItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.nav_inicio -> true
-
-                R.id.nav_historial -> {
-                    mostrarHistorial()
+                R.id.nav_inicio    -> true
+                R.id.nav_historial -> { mostrarHistorial(); false }
+                R.id.nav_perfil    -> { mostrarPerfil(); false }
+                R.id.nav_panel     -> {
+                    startActivity(
+                        Intent(this, SupervisorActivity::class.java).apply {
+                            putExtra(LoginActivity.EXTRA_USUARIO_NOMBRE, nombreUsuario)
+                            putExtra(LoginActivity.EXTRA_USUARIO_ROL, rol)
+                        }
+                    )
                     false
                 }
-
-                R.id.nav_perfil -> {
-                    mostrarPerfil()
-                    false
-                }
-
                 else -> false
             }
         }
