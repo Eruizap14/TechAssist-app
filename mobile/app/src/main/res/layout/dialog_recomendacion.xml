@@ -152,7 +152,7 @@
             android:letterSpacing="0.1"
             android:layout_marginBottom="10dp" />
 
-        <!-- Paso 1 -->
+        <!-- Paso 1 — siempre habilitado -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -164,6 +164,7 @@
                 android:id="@+id/checkPaso1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:enabled="true"
                 app:buttonTint="@color/color_primary" />
 
             <TextView
@@ -179,7 +180,7 @@
 
         </LinearLayout>
 
-        <!-- Paso 2 -->
+        <!-- Paso 2 — bloqueado hasta marcar paso 1 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -191,6 +192,8 @@
                 android:id="@+id/checkPaso2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:enabled="false"
+                android:alpha="0.4"
                 app:buttonTint="@color/color_primary" />
 
             <TextView
@@ -202,11 +205,12 @@
                 android:textSize="14sp"
                 android:textColor="@color/color_on_background"
                 android:lineSpacingExtra="3dp"
+                android:alpha="0.4"
                 android:layout_marginStart="8dp" />
 
         </LinearLayout>
 
-        <!-- Paso 3 -->
+        <!-- Paso 3 — bloqueado hasta marcar paso 2 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -218,6 +222,8 @@
                 android:id="@+id/checkPaso3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:enabled="false"
+                android:alpha="0.4"
                 app:buttonTint="@color/color_primary" />
 
             <TextView
@@ -229,15 +235,18 @@
                 android:textSize="14sp"
                 android:textColor="@color/color_on_background"
                 android:lineSpacingExtra="3dp"
+                android:alpha="0.4"
                 android:layout_marginStart="8dp" />
 
         </LinearLayout>
 
-        <!-- Botón cerrar -->
+        <!-- Botón cerrar — bloqueado hasta completar los 3 pasos -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnCerrar"
             android:layout_width="match_parent"
             android:layout_height="52dp"
+            android:enabled="false"
+            android:alpha="0.4"
             android:text="Entendido ✓"
             android:textSize="15sp"
             android:textStyle="bold"

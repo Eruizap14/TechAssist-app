@@ -234,6 +234,24 @@
 
     </LinearLayout>
 
+    <!-- ── Botón Volver al inicio — solo Administrador ── -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnVolverInicio"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:layout_gravity="bottom"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="76dp"
+        android:text="← Volver al inicio"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:textColor="@color/color_primary"
+        android:visibility="gone"
+        app:backgroundTint="@color/color_surface"
+        app:strokeColor="@color/color_primary"
+        app:strokeWidth="2dp"
+        app:cornerRadius="12dp" />
+
     <!-- ── Botón Exportar Reporte — Filled Button 12dp — según 5.2.6 ── -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnExportar"

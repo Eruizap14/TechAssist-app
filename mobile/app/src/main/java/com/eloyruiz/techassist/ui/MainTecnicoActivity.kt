@@ -18,6 +18,7 @@ import com.eloyruiz.techassist.data.DatabaseHelper
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.checkbox.MaterialCheckBox
 
 class MainTecnicoActivity : AppCompatActivity() {
 
@@ -253,9 +254,47 @@ class MainTecnicoActivity : AppCompatActivity() {
         dialogView.findViewById<TextView>(R.id.tvPaso2).text                  = paso2
         dialogView.findViewById<TextView>(R.id.tvPaso3).text                  = paso3
 
-        dialogView.findViewById<MaterialButton>(R.id.btnCerrar).setOnClickListener {
-            dialog.dismiss()
+        // ── Checkboxes en orden ───────────────────────────────────────────────
+        val checkPaso1 = dialogView.findViewById<MaterialCheckBox>(R.id.checkPaso1)
+        val checkPaso2 = dialogView.findViewById<MaterialCheckBox>(R.id.checkPaso2)
+        val checkPaso3 = dialogView.findViewById<MaterialCheckBox>(R.id.checkPaso3)
+        val tvPaso2    = dialogView.findViewById<TextView>(R.id.tvPaso2)
+        val tvPaso3    = dialogView.findViewById<TextView>(R.id.tvPaso3)
+        val btnCerrar  = dialogView.findViewById<MaterialButton>(R.id.btnCerrar)
+
+        // Estado inicial
+        btnCerrar.isEnabled  = false;  btnCerrar.alpha  = 0.4f
+        checkPaso2.isEnabled = false;  checkPaso2.alpha = 0.4f;  tvPaso2.alpha = 0.4f
+        checkPaso3.isEnabled = false;  checkPaso3.alpha = 0.4f;  tvPaso3.alpha = 0.4f
+
+        checkPaso1.setOnCheckedChangeListener { _, checked ->
+            checkPaso2.isEnabled = checked
+            checkPaso2.alpha     = if (checked) 1f else 0.4f
+            tvPaso2.alpha        = if (checked) 1f else 0.4f
+            if (!checked) {
+                checkPaso2.isChecked = false
+                checkPaso3.isChecked = false
+                checkPaso3.isEnabled = false;  checkPaso3.alpha = 0.4f;  tvPaso3.alpha = 0.4f
+                btnCerrar.isEnabled  = false;  btnCerrar.alpha  = 0.4f
+            }
         }
+
+        checkPaso2.setOnCheckedChangeListener { _, checked ->
+            checkPaso3.isEnabled = checked
+            checkPaso3.alpha     = if (checked) 1f else 0.4f
+            tvPaso3.alpha        = if (checked) 1f else 0.4f
+            if (!checked) {
+                checkPaso3.isChecked = false
+                btnCerrar.isEnabled  = false;  btnCerrar.alpha  = 0.4f
+            }
+        }
+
+        checkPaso3.setOnCheckedChangeListener { _, checked ->
+            btnCerrar.isEnabled = checked
+            btnCerrar.alpha     = if (checked) 1f else 0.4f
+        }
+
+        btnCerrar.setOnClickListener { dialog.dismiss() }
 
         dialog.setContentView(dialogView)
         dialog.show()

@@ -69,19 +69,19 @@ class LoginActivity : AppCompatActivity() {
             val idTexto    = etIdTecnico.text?.toString()?.trim() ?: ""
             val contrasena = etContrasena.text?.toString()?.trim() ?: ""
 
+            // Limpiar errores previos
+            tilIdTecnico.error  = null
+            tilContrasena.error = null
+
             // Validación de campos vacíos
             if (idTexto.isEmpty()) {
                 tilIdTecnico.error = "Introduce tu ID de técnico"
                 return@setOnClickListener
-            } else {
-                tilIdTecnico.error = null
             }
 
             if (contrasena.isEmpty()) {
                 tilContrasena.error = "Introduce tu contraseña"
                 return@setOnClickListener
-            } else {
-                tilContrasena.error = null
             }
 
             val usuarioId = idTexto.toIntOrNull()
@@ -94,7 +94,8 @@ class LoginActivity : AppCompatActivity() {
             val usuario = dbHelper.getUsuarioById(usuarioId)
 
             if (usuario == null) {
-                Snackbar.make(it, "Usuario no encontrado", Snackbar.LENGTH_SHORT).show()
+                tilIdTecnico.error = "ID no encontrado en el sistema"
+                etIdTecnico.requestFocus()
                 return@setOnClickListener
             }
 
@@ -104,9 +105,8 @@ class LoginActivity : AppCompatActivity() {
 
             if (hashIntroducido != hashGuardado) {
                 tilContrasena.error = "Contraseña incorrecta"
+                etContrasena.requestFocus()
                 return@setOnClickListener
-            } else {
-                tilContrasena.error = null
             }
 
             // Guardar sesión si el checkbox está marcado
@@ -121,10 +121,9 @@ class LoginActivity : AppCompatActivity() {
             val nivelId = usuario[Usuario.COL_NIVEL_DIGITAL_ID] as Int
 
             // ── Decidir destino ───────────────────────────────────────────
-            // Supervisores y Administradores van siempre a su panel
-            // Técnicos: si es la primera vez → Minitest, si no → pantalla principal
             val destino: Class<*> = when (rol) {
-                "Supervisor", "Administrador" -> SupervisorActivity::class.java
+                "Supervisor"    -> SupervisorActivity::class.java
+                "Administrador" -> MainTecnicoActivity::class.java
                 else -> {
                     val minitestCompletado = prefs.getBoolean(
                         miniTestKey(usuarioId), false
@@ -164,7 +163,6 @@ class LoginActivity : AppCompatActivity() {
         private const val PREFS_NAME = "techassist_prefs"
         private const val PREF_ID    = "pref_ultimo_id"
 
-        // Clave única por usuario para saber si ya completó el minitest
         fun miniTestKey(usuarioId: Int) = "minitest_completado_$usuarioId"
     }
 }

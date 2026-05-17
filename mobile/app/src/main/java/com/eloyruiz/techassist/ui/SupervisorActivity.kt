@@ -35,6 +35,8 @@ class SupervisorActivity : AppCompatActivity() {
     private var nombreSupervisor = "Supervisor"
 
     // ─────────────────────────────────────────────────────────────────────────
+    private lateinit var btnVolverInicio: MaterialButton
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,6 +51,7 @@ class SupervisorActivity : AppCompatActivity() {
         cargarDatos()
         configurarBotonExportar()
         comprobarConexion()
+        configurarBotonVolver()
     }
 
     // ── Binding ───────────────────────────────────────────────────────────────
@@ -60,6 +63,7 @@ class SupervisorActivity : AppCompatActivity() {
         rvTecnicos         = findViewById(R.id.rvTecnicos)
         btnExportar        = findViewById(R.id.btnExportar)
         bannerOffline      = findViewById(R.id.bannerOffline)
+        btnVolverInicio = findViewById(R.id.btnVolverInicio)
     }
 
     // ── Toolbar ───────────────────────────────────────────────────────────────
@@ -193,5 +197,15 @@ class SupervisorActivity : AppCompatActivity() {
         val network = cm.activeNetwork ?: return false
         val caps    = cm.getNetworkCapabilities(network) ?: return false
         return caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+    }
+
+    private fun configurarBotonVolver() {
+        val rol = intent.getStringExtra(LoginActivity.EXTRA_USUARIO_ROL) ?: ""
+        if (rol == "Administrador") {
+            btnVolverInicio.visibility = View.VISIBLE
+            btnVolverInicio.setOnClickListener {
+                finish() // cierra SupervisorActivity y vuelve a MainTecnicoActivity
+            }
+        }
     }
 }
