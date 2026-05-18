@@ -34,7 +34,6 @@ class TecnicoAdapter(private var items: List<TecnicoItem>) :
         holder.tvNivel.text     = item.nivel
         holder.tvConsultas.text = item.consultas.toString()
 
-        // Alternar fondo para facilitar lectura — según 5.2.6
         holder.itemView.setBackgroundColor(
             if (position % 2 == 0) 0xFFFFFFFF.toInt()
             else                   0xFFF5F5F5.toInt()

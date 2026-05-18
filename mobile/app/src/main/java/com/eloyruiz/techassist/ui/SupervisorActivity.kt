@@ -126,7 +126,6 @@ class SupervisorActivity : AppCompatActivity() {
         else "—"
     }
 
-    // ── Botón exportar — se desactiva en gris sin conexión — según 5.2.6 ─────
 
     private fun configurarBotonExportar() {
         actualizarEstadoBoton(isOnline())
