@@ -20,7 +20,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(
 
     companion object {
         const val DATABASE_NAME    = "techassist.db"
-        const val DATABASE_VERSION = 5
+        const val DATABASE_VERSION = 6
     }
 
     override fun onCreate(db: SQLiteDatabase) {
@@ -69,13 +69,20 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(
         db.execSQL("INSERT INTO ${Guia.TABLE_NAME} (${Guia.COL_HERRAMIENTA_ID}, ${Guia.COL_PASO_1}, ${Guia.COL_PASO_2}, ${Guia.COL_PASO_3}) VALUES (7, 'Consulta la documentación del fabricante para conocer el par de apriete en N·m para cada tornillo o conexión.', 'Ajusta la escala de la llave al valor indicado y selecciona el vaso adecuado al tipo y tamaño del tornillo.', 'Aprieta con movimiento suave y continuo hasta que la llave emita el clic o ceda, indicando que se alcanzó el par programado.')")
         db.execSQL("INSERT INTO ${Guia.TABLE_NAME} (${Guia.COL_HERRAMIENTA_ID}, ${Guia.COL_PASO_1}, ${Guia.COL_PASO_2}, ${Guia.COL_PASO_3}) VALUES (8, 'Accede a la plataforma de análisis de vibraciones y selecciona el activo a monitorizar. Conecta el sensor al punto de medición indicado en el plano del equipo.', 'Inicia la captura con el equipo en condiciones normales de carga durante al menos 30 segundos para obtener un espectro representativo.', 'Compara el espectro con la línea base del equipo. Un aumento de amplitud en frecuencias características indica desgaste o desequilibrio.')")
 
-        val hash1234   = hashSha256("1234")
-        val hashAdmin  = hashSha256("admin")
-        val hashSergio = hashSha256("sergio123")
+        val hash1234     = hashSha256("1234")
+        val hashAdmin    = hashSha256("admin")
+        val hashSergio   = hashSha256("sergio123")
+        val hashCarlos   = hashSha256("carlos123")
+        val hashLaura    = hashSha256("laura123")
+        val hashMiguel   = hashSha256("miguel123")
+        val hashSuperv   = hashSha256("superv123")
 
-        db.execSQL("INSERT INTO ${Usuario.TABLE_NAME} (${Usuario.COL_ID}, ${Usuario.COL_NOMBRE}, ${Usuario.COL_ROL}, ${Usuario.COL_NIVEL_DIGITAL_ID}, ${Usuario.COL_CONTRASENA}) VALUES (1234, 'Técnico Demo', 'Técnico', 1, '$hash1234')")
-        db.execSQL("INSERT INTO ${Usuario.TABLE_NAME} (${Usuario.COL_ID}, ${Usuario.COL_NOMBRE}, ${Usuario.COL_ROL}, ${Usuario.COL_NIVEL_DIGITAL_ID}, ${Usuario.COL_CONTRASENA}) VALUES (0, 'Administrador', 'Administrador', 3, '$hashAdmin')")
-        db.execSQL("INSERT INTO ${Usuario.TABLE_NAME} (${Usuario.COL_ID}, ${Usuario.COL_NOMBRE}, ${Usuario.COL_ROL}, ${Usuario.COL_NIVEL_DIGITAL_ID}, ${Usuario.COL_CONTRASENA}) VALUES (5678, 'Sergio Sánchez', 'Técnico', 1, '$hashSergio')")
+        db.execSQL("INSERT INTO ${Usuario.TABLE_NAME} (${Usuario.COL_ID}, ${Usuario.COL_NOMBRE}, ${Usuario.COL_ROL}, ${Usuario.COL_NIVEL_DIGITAL_ID}, ${Usuario.COL_CONTRASENA}) VALUES (0,    'Administrador',      'Administrador', 3, '$hashAdmin')")
+        db.execSQL("INSERT INTO ${Usuario.TABLE_NAME} (${Usuario.COL_ID}, ${Usuario.COL_NOMBRE}, ${Usuario.COL_ROL}, ${Usuario.COL_NIVEL_DIGITAL_ID}, ${Usuario.COL_CONTRASENA}) VALUES (1001, 'Ana González',       'Supervisor',    3, '$hashSuperv')")
+        db.execSQL("INSERT INTO ${Usuario.TABLE_NAME} (${Usuario.COL_ID}, ${Usuario.COL_NOMBRE}, ${Usuario.COL_ROL}, ${Usuario.COL_NIVEL_DIGITAL_ID}, ${Usuario.COL_CONTRASENA}) VALUES (1234, 'Sergio Sánchez',     'Técnico',       1, '$hashSergio')")
+        db.execSQL("INSERT INTO ${Usuario.TABLE_NAME} (${Usuario.COL_ID}, ${Usuario.COL_NOMBRE}, ${Usuario.COL_ROL}, ${Usuario.COL_NIVEL_DIGITAL_ID}, ${Usuario.COL_CONTRASENA}) VALUES (2001, 'Carlos Martínez',    'Técnico',       2, '$hashCarlos')")
+        db.execSQL("INSERT INTO ${Usuario.TABLE_NAME} (${Usuario.COL_ID}, ${Usuario.COL_NOMBRE}, ${Usuario.COL_ROL}, ${Usuario.COL_NIVEL_DIGITAL_ID}, ${Usuario.COL_CONTRASENA}) VALUES (2002, 'Laura Fernández',    'Técnico',       1, '$hashLaura')")
+        db.execSQL("INSERT INTO ${Usuario.TABLE_NAME} (${Usuario.COL_ID}, ${Usuario.COL_NOMBRE}, ${Usuario.COL_ROL}, ${Usuario.COL_NIVEL_DIGITAL_ID}, ${Usuario.COL_CONTRASENA}) VALUES (2003, 'Miguel Torres',      'Técnico',       3, '$hashMiguel')")
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
