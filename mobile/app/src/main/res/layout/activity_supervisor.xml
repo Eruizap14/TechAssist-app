@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:background="@color/color_background">
 
-    <!-- ── App Bar roja con hamburger menu — según 5.2.6 ── -->
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -17,30 +16,47 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/color_primary"
-            >
+            android:background="@color/color_primary">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:orientation="horizontal"
                 android:gravity="center_vertical">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Rendimiento de grupo"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/color_on_primary" />
+                <ImageButton
+                    android:id="@+id/btnVolverInicio"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@android:drawable/ic_menu_revert"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    app:tint="@color/color_on_primary"
+                    android:visibility="gone"
+                    android:layout_marginEnd="8dp" />
 
-                <TextView
-                    android:id="@+id/tvSaludoSupervisor"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Supervisor"
-                    android:textSize="12sp"
-                    android:textColor="#FFCCCC" />
+                    android:orientation="vertical"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Rendimiento de grupo"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/color_on_primary" />
+
+                    <TextView
+                        android:id="@+id/tvSaludoSupervisor"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Supervisor"
+                        android:textSize="12sp"
+                        android:textColor="#FFCCCC" />
+
+                </LinearLayout>
 
             </LinearLayout>
 
@@ -48,7 +64,6 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <!-- ── Contenido principal ── -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -56,7 +71,6 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:paddingBottom="80dp">
 
-        <!-- KPIs resumen -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -65,7 +79,6 @@
             android:paddingTop="16dp"
             android:paddingBottom="8dp">
 
-            <!-- Total consultas hoy -->
             <androidx.cardview.widget.CardView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -102,7 +115,6 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Herramienta más usada -->
             <androidx.cardview.widget.CardView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -143,7 +155,6 @@
 
         </LinearLayout>
 
-        <!-- Título tabla de técnicos -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -155,7 +166,6 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp" />
 
-        <!-- Cabecera de tabla — gris neutro — según 5.2.6 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -198,18 +208,15 @@
 
         </LinearLayout>
 
-        <!-- RecyclerView con lista de técnicos -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvTecnicos"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:paddingHorizontal="0dp"
             android:clipToPadding="false" />
 
     </LinearLayout>
 
-    <!-- ── Banner Offline ámbar — según 5.2.6 ── -->
     <LinearLayout
         android:id="@+id/bannerOffline"
         android:layout_width="match_parent"
@@ -219,9 +226,11 @@
         android:paddingHorizontal="16dp"
         android:paddingVertical="10dp"
         android:gravity="center_vertical"
-        android:layout_gravity="bottom"
-        android:layout_marginBottom="64dp"
-        android:visibility="gone">
+        android:elevation="4dp"
+        android:visibility="gone"
+        app:layout_anchor="@id/btnExportar"
+        app:layout_anchorGravity="top"
+        android:translationY="-20dp">
 
         <TextView
             android:layout_width="0dp"
@@ -234,25 +243,6 @@
 
     </LinearLayout>
 
-    <!-- ── Botón Volver al inicio — solo Administrador ── -->
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnVolverInicio"
-        android:layout_width="match_parent"
-        android:layout_height="52dp"
-        android:layout_gravity="bottom"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginBottom="76dp"
-        android:text="← Volver al inicio"
-        android:textSize="15sp"
-        android:textStyle="bold"
-        android:textColor="@color/color_primary"
-        android:visibility="gone"
-        app:backgroundTint="@color/color_surface"
-        app:strokeColor="@color/color_primary"
-        app:strokeWidth="2dp"
-        app:cornerRadius="12dp" />
-
-    <!-- ── Botón Exportar Reporte — Filled Button 12dp — según 5.2.6 ── -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnExportar"
         android:layout_width="match_parent"

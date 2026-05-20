@@ -3,7 +3,9 @@ package com.eloyruiz.techassist.ui
 import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
+import android.net.Network
 import android.net.NetworkCapabilities
+import android.net.NetworkRequest
 import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
@@ -22,7 +24,6 @@ import com.google.android.material.checkbox.MaterialCheckBox
 
 class MainTecnicoActivity : AppCompatActivity() {
 
-    // ── Vistas ────────────────────────────────────────────────────────────────
     private lateinit var tvSaludo:        TextView
     private lateinit var etBuscador:      AutoCompleteTextView
     private lateinit var bannerOffline:   LinearLayout
@@ -37,11 +38,13 @@ class MainTecnicoActivity : AppCompatActivity() {
     private lateinit var cardMecanico:    CardView
     private lateinit var cardPredictivo:  CardView
 
-    // ── Datos ─────────────────────────────────────────────────────────────────
     private lateinit var dbHelper:    DatabaseHelper
     private var usuarioId:     Int    = -1
     private var nombreUsuario: String = "Técnico"
     private var nivelId:       Int    = 1
+
+    private lateinit var connectivityManager: ConnectivityManager
+    private lateinit var networkCallback:     ConnectivityManager.NetworkCallback
 
     private val categorias = mapOf(
         R.id.cardCorrectivo  to "Correctivo",
@@ -53,8 +56,6 @@ class MainTecnicoActivity : AppCompatActivity() {
         R.id.cardMecanico    to "Mecánico",
         R.id.cardPredictivo  to "Predictivo"
     )
-
-    // ─────────────────────────────────────────────────────────────────────────
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,10 +71,41 @@ class MainTecnicoActivity : AppCompatActivity() {
         configurarBuscador()
         configurarCategorias()
         configurarMenu()
-        comprobarConexion()
     }
 
-    // ── Binding ───────────────────────────────────────────────────────────────
+    override fun onResume() {
+        super.onResume()
+        connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+        networkCallback = object : ConnectivityManager.NetworkCallback() {
+            override fun onAvailable(network: Network) {
+                runOnUiThread { bannerOffline.visibility = View.GONE }
+            }
+            override fun onLost(network: Network) {
+                runOnUiThread { bannerOffline.visibility = View.VISIBLE }
+            }
+        }
+
+        val request = NetworkRequest.Builder()
+            .addCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
+            .build()
+
+        connectivityManager.registerNetworkCallback(request, networkCallback)
+
+        val online = connectivityManager.activeNetwork
+            ?.let { connectivityManager.getNetworkCapabilities(it) }
+            ?.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED) == true
+        bannerOffline.visibility = if (online) View.GONE else View.VISIBLE
+
+        val caps = connectivityManager.activeNetwork
+            ?.let { connectivityManager.getNetworkCapabilities(it) }
+
+    }
+
+    override fun onPause() {
+        super.onPause()
+        connectivityManager.unregisterNetworkCallback(networkCallback)
+    }
 
     private fun bindViews() {
         tvSaludo        = findViewById(R.id.tvSaludo)
@@ -91,13 +123,9 @@ class MainTecnicoActivity : AppCompatActivity() {
         cardPredictivo  = findViewById(R.id.cardPredictivo)
     }
 
-    // ── Saludo ────────────────────────────────────────────────────────────────
-
     private fun configurarSaludo() {
         tvSaludo.text = "Hola, $nombreUsuario 👋"
     }
-
-    // ── Buscador ──────────────────────────────────────────────────────────────
 
     private fun configurarBuscador() {
         val sugerencias = listOf(
@@ -119,8 +147,6 @@ class MainTecnicoActivity : AppCompatActivity() {
         }
     }
 
-    // ── Categorías ────────────────────────────────────────────────────────────
-
     private fun configurarCategorias() {
         listOf(
             cardCorrectivo, cardPreventivo, cardLimpieza, cardElectrico,
@@ -132,8 +158,6 @@ class MainTecnicoActivity : AppCompatActivity() {
             }
         }
     }
-
-    // ── Menú inferior ─────────────────────────────────────────────────────────
 
     private fun configurarMenu() {
         val rol = intent.getStringExtra(LoginActivity.EXTRA_USUARIO_ROL) ?: ""
@@ -160,8 +184,7 @@ class MainTecnicoActivity : AppCompatActivity() {
     }
 
     private fun mostrarHistorial() {
-        val consultas = dbHelper.getConsultasByUsuario(usuarioId)
-
+        val consultas  = dbHelper.getConsultasByUsuario(usuarioId)
         val dialog     = BottomSheetDialog(this)
         val dialogView = layoutInflater.inflate(R.layout.dialog_historial, null)
 
@@ -203,8 +226,6 @@ class MainTecnicoActivity : AppCompatActivity() {
         dialog.setContentView(dialogView)
         dialog.show()
     }
-
-    // ── Recomendación ─────────────────────────────────────────────────────────
 
     private fun buscarRecomendacion(categoriaTarea: String) {
         val recomendacion = dbHelper.getRecomendacionPorCategoria(categoriaTarea)
@@ -254,7 +275,6 @@ class MainTecnicoActivity : AppCompatActivity() {
         dialogView.findViewById<TextView>(R.id.tvPaso2).text                  = paso2
         dialogView.findViewById<TextView>(R.id.tvPaso3).text                  = paso3
 
-        // ── Checkboxes en orden ───────────────────────────────────────────────
         val checkPaso1 = dialogView.findViewById<MaterialCheckBox>(R.id.checkPaso1)
         val checkPaso2 = dialogView.findViewById<MaterialCheckBox>(R.id.checkPaso2)
         val checkPaso3 = dialogView.findViewById<MaterialCheckBox>(R.id.checkPaso3)
@@ -262,7 +282,6 @@ class MainTecnicoActivity : AppCompatActivity() {
         val tvPaso3    = dialogView.findViewById<TextView>(R.id.tvPaso3)
         val btnCerrar  = dialogView.findViewById<MaterialButton>(R.id.btnCerrar)
 
-        // Estado inicial
         btnCerrar.isEnabled  = false;  btnCerrar.alpha  = 0.4f
         checkPaso2.isEnabled = false;  checkPaso2.alpha = 0.4f;  tvPaso2.alpha = 0.4f
         checkPaso3.isEnabled = false;  checkPaso3.alpha = 0.4f;  tvPaso3.alpha = 0.4f
@@ -298,18 +317,5 @@ class MainTecnicoActivity : AppCompatActivity() {
 
         dialog.setContentView(dialogView)
         dialog.show()
-    }
-
-    // ── Conexión ──────────────────────────────────────────────────────────────
-
-    private fun comprobarConexion() {
-        bannerOffline.visibility = if (isOnline()) View.GONE else View.VISIBLE
-    }
-
-    private fun isOnline(): Boolean {
-        val cm      = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val network = cm.activeNetwork ?: return false
-        val caps    = cm.getNetworkCapabilities(network) ?: return false
-        return caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
     }
 }

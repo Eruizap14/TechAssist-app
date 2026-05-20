@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:background="@color/color_background">
 
-    <!-- ── App Bar roja corporativa #D32F2F ── -->
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
@@ -22,7 +21,6 @@
             android:paddingTop="20dp"
             android:paddingBottom="16dp">
 
-            <!-- Saludo personalizado — sin toolbar -->
             <TextView
                 android:id="@+id/tvSaludo"
                 android:layout_width="wrap_content"
@@ -33,7 +31,6 @@
                 android:textColor="@color/color_on_primary"
                 android:layout_marginBottom="12dp" />
 
-            <!-- Buscador predictivo -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilBuscador"
                 android:layout_width="match_parent"
@@ -69,7 +66,6 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <!-- ── Contenido principal ── -->
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -83,7 +79,6 @@
             android:orientation="vertical"
             android:paddingTop="16dp">
 
-            <!-- Título sección -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -94,7 +89,6 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginBottom="12dp" />
 
-            <!-- Rejilla 2×4 de categorías -->
             <GridLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -103,7 +97,6 @@
                 android:useDefaultMargins="true"
                 android:paddingHorizontal="8dp">
 
-                <!-- Correctivo -->
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardCorrectivo"
                     android:layout_width="0dp"
@@ -124,7 +117,6 @@
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
-                <!-- Preventivo -->
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardPreventivo"
                     android:layout_width="0dp"
@@ -145,7 +137,6 @@
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
-                <!-- Limpieza -->
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardLimpieza"
                     android:layout_width="0dp"
@@ -166,7 +157,6 @@
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
-                <!-- Eléctrico -->
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardElectrico"
                     android:layout_width="0dp"
@@ -187,7 +177,6 @@
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
-                <!-- Lubricación -->
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardLubricacion"
                     android:layout_width="0dp"
@@ -208,7 +197,6 @@
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
-                <!-- Inspección -->
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardInspeccion"
                     android:layout_width="0dp"
@@ -229,7 +217,6 @@
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
-                <!-- Mecánico -->
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardMecanico"
                     android:layout_width="0dp"
@@ -250,7 +237,6 @@
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
-                <!-- Predictivo -->
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardPredictivo"
                     android:layout_width="0dp"
@@ -277,7 +263,17 @@
 
     </androidx.core.widget.NestedScrollView>
 
-    <!-- ── Banner Offline ── -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNav"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@color/color_surface"
+        app:menu="@menu/menu_tecnico"
+        app:itemIconTint="@color/color_primary"
+        app:itemTextColor="@color/color_primary"
+        app:elevation="8dp" />
+
     <LinearLayout
         android:id="@+id/bannerOffline"
         android:layout_width="match_parent"
@@ -287,9 +283,11 @@
         android:paddingHorizontal="16dp"
         android:paddingVertical="12dp"
         android:gravity="center_vertical"
-        android:layout_gravity="bottom"
-        android:layout_marginBottom="56dp"
-        android:visibility="gone">
+        android:elevation="4dp"
+        android:visibility="gone"
+        app:layout_anchor="@id/bottomNav"
+        app:layout_anchorGravity="top"
+        android:translationY="-20dp">
 
         <TextView
             android:layout_width="0dp"
@@ -301,17 +299,5 @@
             android:textStyle="bold" />
 
     </LinearLayout>
-
-    <!-- ── Menú de navegación inferior ── -->
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottomNav"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:background="@color/color_surface"
-        app:menu="@menu/menu_tecnico"
-        app:itemIconTint="@color/color_primary"
-        app:itemTextColor="@color/color_primary"
-        app:elevation="8dp" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
