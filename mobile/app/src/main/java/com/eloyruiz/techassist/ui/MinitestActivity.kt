@@ -150,7 +150,7 @@ class MinitestActivity : AppCompatActivity() {
 
         progressBar.progress  = pct
         tvContador.text       = "$pct% completado"
-        tvPuntuacion.text     = "$puntuacion/${total * 2}"
+        tvPuntuacion.text = "$puntuacion/$total"
         tvPregunta.text       = pregunta.enunciado
 
         tvOpcion1.text = pregunta.opciones[0]
